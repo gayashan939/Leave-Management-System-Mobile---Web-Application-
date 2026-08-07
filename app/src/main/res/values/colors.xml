@@ -1,0 +1,10 @@
+<resources>
+    <!-- Brand Colors (used by legacy XML views / splash) -->
+    <color name="navy_900">#FF0A0E1A</color>
+    <color name="teal_60">#FF00BFA5</color>
+    <color name="teal_dark">#FF004D40</color>
+    <color name="text_primary">#FFE8EAF0</color>
+    <color name="status_pending">#FFFFB300</color>
+    <color name="status_approved">#FF00C853</color>
+    <color name="status_rejected">#FFD32F2F</color>
+</resources>

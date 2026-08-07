@@ -1,0 +1,82 @@
+com.leaveflow.app-annotation-experimental-1.4.0-0 C:\Users\gayas\.gradle\caches\9.0.0\transforms\0063e016009fb23642f7ff4de3910959\transformed\annotation-experimental-1.4.0\res
+com.leaveflow.app-startup-runtime-1.1.1-1 C:\Users\gayas\.gradle\caches\9.0.0\transforms\0497b7b7ea34372bea924c603f68e25f\transformed\startup-runtime-1.1.1\res
+com.leaveflow.app-camera-video-1.3.4-2 C:\Users\gayas\.gradle\caches\9.0.0\transforms\05a4dde80ed21c10d4f08ac49945ffaf\transformed\camera-video-1.3.4\res
+com.leaveflow.app-fragment-1.5.1-3 C:\Users\gayas\.gradle\caches\9.0.0\transforms\0cef0f4d45a9ca0e192fa0d8d1253768\transformed\fragment-1.5.1\res
+com.leaveflow.app-hilt-navigation-compose-1.2.0-4 C:\Users\gayas\.gradle\caches\9.0.0\transforms\1089f3ee3fc4b3c357fce038f5ffb897\transformed\hilt-navigation-compose-1.2.0\res
+com.leaveflow.app-camera-lifecycle-1.3.4-5 C:\Users\gayas\.gradle\caches\9.0.0\transforms\129fe05846c01bd68095d7846336fce8\transformed\camera-lifecycle-1.3.4\res
+com.leaveflow.app-emoji2-views-helper-1.3.0-6 C:\Users\gayas\.gradle\caches\9.0.0\transforms\1364605db325822ea205023a87db86ae\transformed\emoji2-views-helper-1.3.0\res
+com.leaveflow.app-work-runtime-ktx-2.9.0-7 C:\Users\gayas\.gradle\caches\9.0.0\transforms\141b51aba3c8712a3e1ba1a1c207221f\transformed\work-runtime-ktx-2.9.0\res
+com.leaveflow.app-material-ripple-release-8 C:\Users\gayas\.gradle\caches\9.0.0\transforms\1e63906cc348c67574e9b1773f331476\transformed\material-ripple-release\res
+com.leaveflow.app-sqlite-2.4.0-9 C:\Users\gayas\.gradle\caches\9.0.0\transforms\200b1c617d71948d4bead38336f1aec9\transformed\sqlite-2.4.0\res
+com.leaveflow.app-ui-tooling-release-10 C:\Users\gayas\.gradle\caches\9.0.0\transforms\220f3fe40e7e1a86678dc557cea11f24\transformed\ui-tooling-release\res
+com.leaveflow.app-core-ktx-1.13.1-11 C:\Users\gayas\.gradle\caches\9.0.0\transforms\263b70fafc29c8a283c7b48926cb2299\transformed\core-ktx-1.13.1\res
+com.leaveflow.app-appcompat-resources-1.6.1-12 C:\Users\gayas\.gradle\caches\9.0.0\transforms\2854391296554ff10274067bb72651d4\transformed\appcompat-resources-1.6.1\res
+com.leaveflow.app-ui-tooling-preview-release-13 C:\Users\gayas\.gradle\caches\9.0.0\transforms\296a3c84b5851797190503ad5c3c0b37\transformed\ui-tooling-preview-release\res
+com.leaveflow.app-ui-text-release-14 C:\Users\gayas\.gradle\caches\9.0.0\transforms\29f56dd33a73e2d46ddc6e220efcf36b\transformed\ui-text-release\res
+com.leaveflow.app-animation-release-15 C:\Users\gayas\.gradle\caches\9.0.0\transforms\2c5d00d506946f9c8cbf747f77bf9412\transformed\animation-release\res
+com.leaveflow.app-coil-base-2.6.0-16 C:\Users\gayas\.gradle\caches\9.0.0\transforms\2ce23f053efda34a5857cd94c5d4539d\transformed\coil-base-2.6.0\res
+com.leaveflow.app-ui-unit-release-17 C:\Users\gayas\.gradle\caches\9.0.0\transforms\2e429155b78f80d8a8e4fc5234c7a041\transformed\ui-unit-release\res
+com.leaveflow.app-material-icons-extended-release-18 C:\Users\gayas\.gradle\caches\9.0.0\transforms\31df15f9546d06aea760ad5229dbc67f\transformed\material-icons-extended-release\res
+com.leaveflow.app-activity-1.9.0-19 C:\Users\gayas\.gradle\caches\9.0.0\transforms\34876eaf095a39bf89e793ecbe151bb3\transformed\activity-1.9.0\res
+com.leaveflow.app-room-ktx-2.6.1-20 C:\Users\gayas\.gradle\caches\9.0.0\transforms\392a5c8a8a2b7011bae10c54203860b1\transformed\room-ktx-2.6.1\res
+com.leaveflow.app-navigation-runtime-2.7.7-21 C:\Users\gayas\.gradle\caches\9.0.0\transforms\3f4d89e7d8073f9f9942222f8cef3df1\transformed\navigation-runtime-2.7.7\res
+com.leaveflow.app-runtime-saveable-release-22 C:\Users\gayas\.gradle\caches\9.0.0\transforms\3f818d67d79825375dc050c59962cb88\transformed\runtime-saveable-release\res
+com.leaveflow.app-camera-core-1.3.4-23 C:\Users\gayas\.gradle\caches\9.0.0\transforms\42571d24a061c083625755ad5672fb3c\transformed\camera-core-1.3.4\res
+com.leaveflow.app-savedstate-1.2.1-24 C:\Users\gayas\.gradle\caches\9.0.0\transforms\490ed78939f81d67723794a77d74b596\transformed\savedstate-1.2.1\res
+com.leaveflow.app-camera-view-1.3.4-25 C:\Users\gayas\.gradle\caches\9.0.0\transforms\4ae09948d78eef04560f2355b0f6c5b4\transformed\camera-view-1.3.4\res
+com.leaveflow.app-material-icons-core-release-26 C:\Users\gayas\.gradle\caches\9.0.0\transforms\4fee3ab00126bad802b5df6d13371e15\transformed\material-icons-core-release\res
+com.leaveflow.app-customview-poolingcontainer-1.0.0-27 C:\Users\gayas\.gradle\caches\9.0.0\transforms\5c94963efac27c7b5b705088188d5ea8\transformed\customview-poolingcontainer-1.0.0\res
+com.leaveflow.app-datastore-core-release-28 C:\Users\gayas\.gradle\caches\9.0.0\transforms\5f93bea6361be6075daf737d5f719516\transformed\datastore-core-release\res
+com.leaveflow.app-lifecycle-livedata-core-ktx-2.8.3-29 C:\Users\gayas\.gradle\caches\9.0.0\transforms\60007ee7fae8d627ba927ba56b3a84d7\transformed\lifecycle-livedata-core-ktx-2.8.3\res
+com.leaveflow.app-work-runtime-2.9.0-30 C:\Users\gayas\.gradle\caches\9.0.0\transforms\61b03f6495eb1e2063e5342ce0edf1d6\transformed\work-runtime-2.9.0\res
+com.leaveflow.app-foundation-release-31 C:\Users\gayas\.gradle\caches\9.0.0\transforms\681b84127be35c3e265d99f7cc69c1fa\transformed\foundation-release\res
+com.leaveflow.app-ui-util-release-32 C:\Users\gayas\.gradle\caches\9.0.0\transforms\6b0ad5cb6d071d8446ede34366cb666c\transformed\ui-util-release\res
+com.leaveflow.app-navigation-compose-2.7.7-33 C:\Users\gayas\.gradle\caches\9.0.0\transforms\6c3825d9b54d0063ffcf208b23690973\transformed\navigation-compose-2.7.7\res
+com.leaveflow.app-lifecycle-viewmodel-compose-release-34 C:\Users\gayas\.gradle\caches\9.0.0\transforms\6d370cb0da9adc8e84c20d9d94256b02\transformed\lifecycle-viewmodel-compose-release\res
+com.leaveflow.app-play-services-basement-18.4.0-35 C:\Users\gayas\.gradle\caches\9.0.0\transforms\6e8f20bfbebda132066a0931d7fdf47d\transformed\play-services-basement-18.4.0\res
+com.leaveflow.app-room-runtime-2.6.1-36 C:\Users\gayas\.gradle\caches\9.0.0\transforms\6ff4af60f13b3fc0e7dee3bb7e0d400d\transformed\room-runtime-2.6.1\res
+com.leaveflow.app-lifecycle-runtime-ktx-release-37 C:\Users\gayas\.gradle\caches\9.0.0\transforms\78262c8855ebc82825a4259159011746\transformed\lifecycle-runtime-ktx-release\res
+com.leaveflow.app-camera-camera2-1.3.4-38 C:\Users\gayas\.gradle\caches\9.0.0\transforms\7b6373c3680ec4e03c02d5c8db1e8865\transformed\camera-camera2-1.3.4\res
+com.leaveflow.app-ui-graphics-release-39 C:\Users\gayas\.gradle\caches\9.0.0\transforms\845358a61654a14adcce96a8ca05418f\transformed\ui-graphics-release\res
+com.leaveflow.app-profileinstaller-1.3.1-40 C:\Users\gayas\.gradle\caches\9.0.0\transforms\84bc7f53034bcb617e048eb2119bf657\transformed\profileinstaller-1.3.1\res
+com.leaveflow.app-ui-release-41 C:\Users\gayas\.gradle\caches\9.0.0\transforms\8d60a521fb915d66d1d1420fbe3fcd35\transformed\ui-release\res
+com.leaveflow.app-hilt-work-1.2.0-42 C:\Users\gayas\.gradle\caches\9.0.0\transforms\8da573ff921a4181a0a5cfaabc1786c3\transformed\hilt-work-1.2.0\res
+com.leaveflow.app-lifecycle-livedata-core-2.8.3-43 C:\Users\gayas\.gradle\caches\9.0.0\transforms\8ee2f0e1a11d7242b68c016c2a61469d\transformed\lifecycle-livedata-core-2.8.3\res
+com.leaveflow.app-ui-test-manifest-1.6.8-44 C:\Users\gayas\.gradle\caches\9.0.0\transforms\921ba7eff9169ea0a7bff5d8da80cca0\transformed\ui-test-manifest-1.6.8\res
+com.leaveflow.app-hilt-navigation-1.2.0-45 C:\Users\gayas\.gradle\caches\9.0.0\transforms\96623496201781675a1f9b2eb3bd02e0\transformed\hilt-navigation-1.2.0\res
+com.leaveflow.app-lifecycle-service-2.8.3-46 C:\Users\gayas\.gradle\caches\9.0.0\transforms\9d5a626d7a2b84ba2fc1ab3d77e74e3c\transformed\lifecycle-service-2.8.3\res
+com.leaveflow.app-lifecycle-viewmodel-ktx-2.8.3-47 C:\Users\gayas\.gradle\caches\9.0.0\transforms\a283d0f089cc6ac9ad2128a058dcd44b\transformed\lifecycle-viewmodel-ktx-2.8.3\res
+com.leaveflow.app-navigation-common-2.7.7-48 C:\Users\gayas\.gradle\caches\9.0.0\transforms\adf948a13b989ba70bba850b04474c99\transformed\navigation-common-2.7.7\res
+com.leaveflow.app-material-release-49 C:\Users\gayas\.gradle\caches\9.0.0\transforms\b18e89036dc29f371498626594bef385\transformed\material-release\res
+com.leaveflow.app-sqlite-framework-2.4.0-50 C:\Users\gayas\.gradle\caches\9.0.0\transforms\b3839e558c3f8bafdc04ed34f1eb1290\transformed\sqlite-framework-2.4.0\res
+com.leaveflow.app-savedstate-ktx-1.2.1-51 C:\Users\gayas\.gradle\caches\9.0.0\transforms\b43e80985b8a26cd8f783c1c12d32188\transformed\savedstate-ktx-1.2.1\res
+com.leaveflow.app-lifecycle-livedata-2.8.3-52 C:\Users\gayas\.gradle\caches\9.0.0\transforms\b5cc03c005010c82e1d32d867d7421a8\transformed\lifecycle-livedata-2.8.3\res
+com.leaveflow.app-emoji2-1.3.0-53 C:\Users\gayas\.gradle\caches\9.0.0\transforms\bbcc9e2351e8655d61f70b314aea72a4\transformed\emoji2-1.3.0\res
+com.leaveflow.app-ui-geometry-release-54 C:\Users\gayas\.gradle\caches\9.0.0\transforms\c62075693866e285a9b12822fbe8ea9e\transformed\ui-geometry-release\res
+com.leaveflow.app-activity-compose-1.9.0-55 C:\Users\gayas\.gradle\caches\9.0.0\transforms\c69765f57ba3edfec85e4efbb70a2e26\transformed\activity-compose-1.9.0\res
+com.leaveflow.app-material3-release-56 C:\Users\gayas\.gradle\caches\9.0.0\transforms\cb744ce18a1d6c6973eb9e9e24d2da0f\transformed\material3-release\res
+com.leaveflow.app-ui-tooling-data-release-57 C:\Users\gayas\.gradle\caches\9.0.0\transforms\cb9f09a87067d76df308fe9d7059cf3a\transformed\ui-tooling-data-release\res
+com.leaveflow.app-lifecycle-process-2.8.3-58 C:\Users\gayas\.gradle\caches\9.0.0\transforms\cfcc803fa0b8e59c3cd0f54db7093145\transformed\lifecycle-process-2.8.3\res
+com.leaveflow.app-navigation-runtime-ktx-2.7.7-59 C:\Users\gayas\.gradle\caches\9.0.0\transforms\d055c0d1e7738312238c59578a0c6882\transformed\navigation-runtime-ktx-2.7.7\res
+com.leaveflow.app-lifecycle-viewmodel-release-60 C:\Users\gayas\.gradle\caches\9.0.0\transforms\d392af07a56957db49c61362c3b78331\transformed\lifecycle-viewmodel-release\res
+com.leaveflow.app-activity-ktx-1.9.0-61 C:\Users\gayas\.gradle\caches\9.0.0\transforms\d4fb7949cb3a8661d0c5f1496060459b\transformed\activity-ktx-1.9.0\res
+com.leaveflow.app-appcompat-1.6.1-62 C:\Users\gayas\.gradle\caches\9.0.0\transforms\dbbad4c2050ee5f8bd1b2ecf5038c74c\transformed\appcompat-1.6.1\res
+com.leaveflow.app-animation-core-release-63 C:\Users\gayas\.gradle\caches\9.0.0\transforms\e37c9706c56e3430d8b75df99d8e6d69\transformed\animation-core-release\res
+com.leaveflow.app-core-runtime-2.2.0-64 C:\Users\gayas\.gradle\caches\9.0.0\transforms\e39fcd3b114b7ccc5c18d52325410803\transformed\core-runtime-2.2.0\res
+com.leaveflow.app-foundation-layout-release-65 C:\Users\gayas\.gradle\caches\9.0.0\transforms\e8c2fb96712409e73f3d345e435eea0f\transformed\foundation-layout-release\res
+com.leaveflow.app-play-services-base-18.5.0-66 C:\Users\gayas\.gradle\caches\9.0.0\transforms\eb078ac6af6ab1fc63b620441cac1a68\transformed\play-services-base-18.5.0\res
+com.leaveflow.app-lifecycle-viewmodel-savedstate-2.8.3-67 C:\Users\gayas\.gradle\caches\9.0.0\transforms\ec1fa67233232579edf343747f7ce35c\transformed\lifecycle-viewmodel-savedstate-2.8.3\res
+com.leaveflow.app-datastore-release-68 C:\Users\gayas\.gradle\caches\9.0.0\transforms\ee8a7add103cb21ac6197bff7b2ac5cb\transformed\datastore-release\res
+com.leaveflow.app-core-1.13.1-69 C:\Users\gayas\.gradle\caches\9.0.0\transforms\f498f75593323c1d1ef1b1f67e4ad898\transformed\core-1.13.1\res
+com.leaveflow.app-navigation-common-ktx-2.7.7-70 C:\Users\gayas\.gradle\caches\9.0.0\transforms\fb3d587a958a61cad98b5c61759d6187\transformed\navigation-common-ktx-2.7.7\res
+com.leaveflow.app-datastore-preferences-release-71 C:\Users\gayas\.gradle\caches\9.0.0\transforms\fd36eedd1d34c7206f4fdf56d4ef9bd7\transformed\datastore-preferences-release\res
+com.leaveflow.app-lifecycle-runtime-release-72 C:\Users\gayas\.gradle\caches\9.0.0\transforms\fe669e8e33cf8996ac8b220242aaa02f\transformed\lifecycle-runtime-release\res
+com.leaveflow.app-runtime-release-73 C:\Users\gayas\.gradle\caches\9.0.0\transforms\ff5f155ebce699121dad6b6b0115b79c\transformed\runtime-release\res
+com.leaveflow.app-pngs-74 D:\HND SE\MAD\Leave Management System\app\build\generated\res\pngs\debug
+com.leaveflow.app-resValues-75 D:\HND SE\MAD\Leave Management System\app\build\generated\res\resValues\debug
+com.leaveflow.app-updated_navigation_xml-76 D:\HND SE\MAD\Leave Management System\app\build\generated\updated_navigation_xml\debug
+com.leaveflow.app-packageDebugResources-77 D:\HND SE\MAD\Leave Management System\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.leaveflow.app-packageDebugResources-78 D:\HND SE\MAD\Leave Management System\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.leaveflow.app-debug-79 D:\HND SE\MAD\Leave Management System\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.leaveflow.app-debug-80 D:\HND SE\MAD\Leave Management System\app\src\debug\res
+com.leaveflow.app-main-81 D:\HND SE\MAD\Leave Management System\app\src\main\res

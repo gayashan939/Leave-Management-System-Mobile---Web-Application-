@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="navy_900">#FF0A0E1A</color>
+    <color name="status_approved">#FF00C853</color>
+    <color name="status_pending">#FFFFB300</color>
+    <color name="status_rejected">#FFD32F2F</color>
+    <color name="teal_60">#FF00BFA5</color>
+    <color name="teal_dark">#FF004D40</color>
+    <color name="text_primary">#FFE8EAF0</color>
+    <string name="app_description">Leave Management System</string>
+    <string name="app_name">LeaveFlow</string>
+    <string name="error_camera_denied">Camera permission denied. Please enable it in Settings.</string>
+    <string name="error_location_denied">Location permission denied. GPS features are disabled.</string>
+    <string name="error_login_failed">Invalid email or password. Please try again.</string>
+    <string name="error_network_unavailable">No internet connection. Changes will sync when online.</string>
+    <string name="leave_annual">Annual Leave</string>
+    <string name="leave_casual">Casual Leave</string>
+    <string name="leave_medical">Medical Leave</string>
+    <string name="leave_nopay">No-Pay Leave</string>
+    <string name="status_approved">Approved</string>
+    <string name="status_pending">Pending</string>
+    <string name="status_rejected">Rejected</string>
+    <string name="sync_failed">Sync Failed</string>
+    <string name="sync_pending">Pending Sync</string>
+    <string name="sync_synced">Synced</string>
+    <style name="Theme.LeaveFlow" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/navy_900</item>
+        <item name="android:statusBarColor">@color/navy_900</item>
+        <item name="android:navigationBarColor">@color/navy_900</item>
+    </style>
+</resources>

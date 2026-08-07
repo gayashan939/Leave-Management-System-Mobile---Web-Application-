@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">LeaveFlow</string>
+    <string name="app_description">Leave Management System</string>
+
+    <!-- Leave Types -->
+    <string name="leave_annual">Annual Leave</string>
+    <string name="leave_casual">Casual Leave</string>
+    <string name="leave_medical">Medical Leave</string>
+    <string name="leave_nopay">No-Pay Leave</string>
+
+    <!-- Status -->
+    <string name="status_pending">Pending</string>
+    <string name="status_approved">Approved</string>
+    <string name="status_rejected">Rejected</string>
+
+    <!-- Sync -->
+    <string name="sync_pending">Pending Sync</string>
+    <string name="sync_synced">Synced</string>
+    <string name="sync_failed">Sync Failed</string>
+
+    <!-- Errors -->
+    <string name="error_camera_denied">Camera permission denied. Please enable it in Settings.</string>
+    <string name="error_location_denied">Location permission denied. GPS features are disabled.</string>
+    <string name="error_network_unavailable">No internet connection. Changes will sync when online.</string>
+    <string name="error_login_failed">Invalid email or password. Please try again.</string>
+</resources>

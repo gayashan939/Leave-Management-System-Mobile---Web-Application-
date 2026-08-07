@@ -27,4 +27,7 @@ interface SyncQueueDao {
 
     @Query("SELECT COUNT(*) FROM sync_queue WHERE status = 'PENDING_SYNC' OR status = 'FAILED'")
     fun getPendingCount(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM sync_queue WHERE status = 'PENDING_SYNC' OR status = 'FAILED'")
+    suspend fun getPendingCountOnce(): Int
 }

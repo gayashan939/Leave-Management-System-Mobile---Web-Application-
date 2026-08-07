@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room.migration.Migration
 import com.leaveflow.app.data.local.dao.LeaveBalanceDao
 import com.leaveflow.app.data.local.dao.LeaveRequestDao
 import com.leaveflow.app.data.local.dao.SyncQueueDao
@@ -13,7 +14,6 @@ import com.leaveflow.app.data.local.entity.LeaveBalanceEntity
 import com.leaveflow.app.data.local.entity.LeaveRequestEntity
 import com.leaveflow.app.data.local.entity.SyncQueueEntity
 import com.leaveflow.app.data.local.entity.UserEntity
-import com.leaveflow.app.util.PasswordUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,7 +27,7 @@ import java.util.*
         LeaveBalanceEntity::class,
         SyncQueueEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -50,10 +50,18 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     DATABASE_NAME
                 )
+                    .addMigrations(MIGRATION_1_2)
                     .addCallback(SeedCallback(context))
                     .build()
                 INSTANCE = instance
                 instance
+            }
+        }
+
+        /** Firebase Authentication now owns credentials; erase legacy local hashes. */
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("UPDATE users SET passwordHash = ''")
             }
         }
     }
@@ -83,14 +91,12 @@ abstract class AppDatabase : RoomDatabase() {
             val employeeId2 = "user-emp-002"
             val hrId        = "user-hr-001"
 
-            val passwordHash = PasswordUtil.hashPassword("Pass@1234")
-
             val users = listOf(
                 UserEntity(
                     id         = employeeId1,
                     name       = "John Doe",
                     email      = "john.doe@leaveflow.com",
-                    passwordHash = passwordHash,
+                    passwordHash = "",
                     role       = "EMPLOYEE",
                     department = "Engineering",
                     employeeId = "EMP001",
@@ -100,7 +106,7 @@ abstract class AppDatabase : RoomDatabase() {
                     id         = employeeId2,
                     name       = "Alice Perera",
                     email      = "alice.perera@leaveflow.com",
-                    passwordHash = passwordHash,
+                    passwordHash = "",
                     role       = "EMPLOYEE",
                     department = "Finance",
                     employeeId = "EMP002",
@@ -110,7 +116,7 @@ abstract class AppDatabase : RoomDatabase() {
                     id         = managerId,
                     name       = "Sarah Smith",
                     email      = "sarah.smith@leaveflow.com",
-                    passwordHash = passwordHash,
+                    passwordHash = "",
                     role       = "MANAGER",
                     department = "Engineering",
                     employeeId = "MGR001"
@@ -119,7 +125,7 @@ abstract class AppDatabase : RoomDatabase() {
                     id         = hrId,
                     name       = "Admin HR",
                     email      = "admin.hr@leaveflow.com",
-                    passwordHash = passwordHash,
+                    passwordHash = "",
                     role       = "HR",
                     department = "Human Resources",
                     employeeId = "HR001"
@@ -132,7 +138,7 @@ abstract class AppDatabase : RoomDatabase() {
                 LeaveBalanceEntity(
                     employeeId   = employeeId1,
                     annualTotal  = 20, annualUsed  = 5,  annualPending  = 0,
-                    casualTotal  = 10, casualUsed  = 2,  casualPending  = 0,
+                    casualTotal  = 10, casualUsed  = 2,  casualPending  = 2,
                     medicalTotal = 14, medicalUsed = 0,  medicalPending = 0,
                     noPayUsed    = 0
                 ),

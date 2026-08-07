@@ -22,8 +22,9 @@ class SyncWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return try {
-            syncRepository.syncAll()
-            Result.success()
+            if (syncRepository.syncAll()) Result.success()
+            else if (runAttemptCount < 3) Result.retry()
+            else Result.failure()
         } catch (e: Exception) {
             // Retry up to 3 times with exponential back-off
             if (runAttemptCount < 3) Result.retry() else Result.failure()

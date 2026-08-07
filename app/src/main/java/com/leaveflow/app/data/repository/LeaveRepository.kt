@@ -1,11 +1,14 @@
 package com.leaveflow.app.data.repository
 
+import android.content.Context
 import com.leaveflow.app.data.local.dao.LeaveBalanceDao
 import com.leaveflow.app.data.local.dao.LeaveRequestDao
 import com.leaveflow.app.data.local.dao.SyncQueueDao
 import com.leaveflow.app.data.local.entity.LeaveBalanceEntity
 import com.leaveflow.app.data.local.entity.LeaveRequestEntity
 import com.leaveflow.app.data.local.entity.SyncQueueEntity
+import com.leaveflow.app.data.local.AppDatabase
+import androidx.room.withTransaction
 import com.leaveflow.app.domain.model.LeaveBalance
 import com.leaveflow.app.domain.model.LeaveRequest
 import com.leaveflow.app.domain.model.Result
@@ -16,12 +19,16 @@ import kotlinx.coroutines.flow.map
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
+import dagger.hilt.android.qualifiers.ApplicationContext
+import com.leaveflow.app.worker.SyncWorker
 
 @Singleton
 class LeaveRepository @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val leaveRequestDao: LeaveRequestDao,
     private val leaveBalanceDao: LeaveBalanceDao,
-    private val syncQueueDao: SyncQueueDao
+    private val syncQueueDao: SyncQueueDao,
+    private val database: AppDatabase
 ) {
 
     // ── Read ──────────────────────────────────────────────────────────────────
@@ -106,20 +113,19 @@ class LeaveRepository @Inject constructor(
             syncStatus    = Constants.SYNC_PENDING
         )
 
-        leaveRequestDao.insertLeaveRequest(entity)
-
-        // Reserve pending days in balance
-        leaveBalanceDao.addPendingDays(employeeId, leaveType, days)
-
-        // Enqueue for background sync
-        syncQueueDao.enqueue(
-            SyncQueueEntity(
-                id        = UUID.randomUUID().toString(),
-                requestId = requestId,
-                operation = "CREATE",
-                payload   = entity.toSyncPayload()
+        database.withTransaction {
+            leaveRequestDao.insertLeaveRequest(entity)
+            leaveBalanceDao.addPendingDays(employeeId, leaveType, days)
+            syncQueueDao.enqueue(
+                SyncQueueEntity(
+                    id        = UUID.randomUUID().toString(),
+                    requestId = requestId,
+                    operation = "CREATE",
+                    payload   = entity.toSyncPayload()
+                )
             )
-        )
+        }
+        SyncWorker.triggerManualSync(context)
 
         return Result.Success(entity.toDomain())
     }
@@ -134,26 +140,31 @@ class LeaveRepository @Inject constructor(
     ): Result<Unit> {
         val request = leaveRequestDao.getLeaveRequestById(requestId)
             ?: return Result.Error("Leave request not found.")
-
-        leaveRequestDao.updateLeaveStatus(requestId, status, managerId, comment)
-
-        // Adjust balance
-        when (status) {
-            Constants.STATUS_APPROVED ->
-                leaveBalanceDao.approveDays(request.employeeId, request.leaveType, request.numberOfDays)
-            Constants.STATUS_REJECTED ->
-                leaveBalanceDao.rejectDays(request.employeeId, request.leaveType, request.numberOfDays)
+        if (request.status != Constants.STATUS_PENDING) {
+            return Result.Error("This leave request has already been processed.")
+        }
+        if (status != Constants.STATUS_APPROVED && status != Constants.STATUS_REJECTED) {
+            return Result.Error("Status must be APPROVED or REJECTED.")
         }
 
-        // Enqueue sync for status change
-        syncQueueDao.enqueue(
-            SyncQueueEntity(
-                id        = UUID.randomUUID().toString(),
-                requestId = requestId,
-                operation = "UPDATE",
-                payload   = """{"id":"$requestId","status":"$status","manager_id":"$managerId","manager_comment":"${comment ?: ""}"}"""
+        database.withTransaction {
+            leaveRequestDao.updateLeaveStatus(requestId, status, managerId, comment)
+            when (status) {
+                Constants.STATUS_APPROVED ->
+                    leaveBalanceDao.approveDays(request.employeeId, request.leaveType, request.numberOfDays)
+                Constants.STATUS_REJECTED ->
+                    leaveBalanceDao.rejectDays(request.employeeId, request.leaveType, request.numberOfDays)
+            }
+            syncQueueDao.enqueue(
+                SyncQueueEntity(
+                    id        = UUID.randomUUID().toString(),
+                    requestId = requestId,
+                    operation = "UPDATE",
+                    payload   = "{}"
+                )
             )
-        )
+        }
+        SyncWorker.triggerManualSync(context)
 
         return Result.Success(Unit)
     }
@@ -161,16 +172,24 @@ class LeaveRepository @Inject constructor(
     // ── Delete ────────────────────────────────────────────────────────────────
 
     suspend fun deleteRejectedRequest(requestId: String): Result<Unit> {
-        leaveRequestDao.deleteRejectedRequest(requestId)
-        syncQueueDao.removeByRequestId(requestId)
-        syncQueueDao.enqueue(
-            SyncQueueEntity(
-                id        = UUID.randomUUID().toString(),
-                requestId = requestId,
-                operation = "DELETE",
-                payload   = """{"id":"$requestId"}"""
+        val request = leaveRequestDao.getLeaveRequestById(requestId)
+            ?: return Result.Error("Leave request not found.")
+        if (request.status != Constants.STATUS_REJECTED) {
+            return Result.Error("Only rejected requests can be deleted.")
+        }
+        database.withTransaction {
+            leaveRequestDao.deleteRejectedRequest(requestId)
+            syncQueueDao.removeByRequestId(requestId)
+            syncQueueDao.enqueue(
+                SyncQueueEntity(
+                    id        = UUID.randomUUID().toString(),
+                    requestId = requestId,
+                    operation = "DELETE",
+                    payload   = "{}"
+                )
             )
-        )
+        }
+        SyncWorker.triggerManualSync(context)
         return Result.Success(Unit)
     }
 

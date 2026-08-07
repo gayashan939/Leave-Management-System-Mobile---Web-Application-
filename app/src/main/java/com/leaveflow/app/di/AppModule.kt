@@ -7,8 +7,6 @@ import com.leaveflow.app.data.local.dao.LeaveBalanceDao
 import com.leaveflow.app.data.local.dao.LeaveRequestDao
 import com.leaveflow.app.data.local.dao.SyncQueueDao
 import com.leaveflow.app.data.local.dao.UserDao
-import com.leaveflow.app.data.remote.ApiService
-import com.leaveflow.app.data.remote.RetrofitClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,9 +17,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    // ── Room Database ─────────────────────────────────────────────────────────
-
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase =
@@ -38,14 +33,6 @@ object AppModule {
 
     @Provides
     fun provideSyncQueueDao(db: AppDatabase): SyncQueueDao = db.syncQueueDao()
-
-    // ── Retrofit ──────────────────────────────────────────────────────────────
-
-    @Provides
-    @Singleton
-    fun provideApiService(): ApiService = RetrofitClient.apiService
-
-    // ── WorkManager ───────────────────────────────────────────────────────────
 
     @Provides
     @Singleton

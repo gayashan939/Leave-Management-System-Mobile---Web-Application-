@@ -12,7 +12,8 @@ data class UserEntity(
     @PrimaryKey val id: String,
     val name: String,
     val email: String,
-    val passwordHash: String,
+    // Retained for a non-destructive Room migration; Firebase Auth owns credentials.
+    val passwordHash: String = "",
     val role: String,         // "EMPLOYEE" | "MANAGER" | "HR"
     val department: String,
     val employeeId: String,

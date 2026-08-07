@@ -18,6 +18,9 @@ interface LeaveRequestDao {
     @Query("SELECT * FROM leave_requests WHERE id = :id LIMIT 1")
     suspend fun getLeaveRequestById(id: String): LeaveRequestEntity?
 
+    @Query("DELETE FROM leave_requests WHERE id = :id")
+    suspend fun deleteLeaveRequestById(id: String)
+
     @Query("SELECT * FROM leave_requests WHERE employeeId = :employeeId ORDER BY createdAt DESC")
     fun getLeaveRequestsByEmployee(employeeId: String): Flow<List<LeaveRequestEntity>>
 
@@ -60,9 +63,6 @@ interface LeaveRequestDao {
     // ── Delete ───────────────────────────────────────────────────────────────
     @Query("DELETE FROM leave_requests WHERE id = :id AND status = 'REJECTED'")
     suspend fun deleteRejectedRequest(id: String)
-
-    @Delete
-    suspend fun deleteLeaveRequest(request: LeaveRequestEntity)
 
     // ── Summary queries for HR ────────────────────────────────────────────────
     @Query("SELECT COUNT(*) FROM leave_requests WHERE status = 'APPROVED'")

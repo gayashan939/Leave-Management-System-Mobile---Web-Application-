@@ -9,10 +9,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.leaveflow.app.data.local.dao.UserDao
 import com.leaveflow.app.data.local.entity.UserEntity
+import com.leaveflow.app.data.firebase.FirebaseService
 import com.leaveflow.app.domain.model.Result
 import com.leaveflow.app.domain.model.User
 import com.leaveflow.app.util.Constants
-import com.leaveflow.app.util.PasswordUtil
+import com.leaveflow.app.worker.SyncWorker
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
@@ -26,7 +27,8 @@ private val Context.dataStore: DataStore<Preferences>
 @Singleton
 class AuthRepository @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val userDao: UserDao
+    private val userDao: UserDao,
+    private val firebase: FirebaseService
 ) {
 
     // ── DataStore preference keys ─────────────────────────────────────────────
@@ -40,7 +42,9 @@ class AuthRepository @Inject constructor(
 
     // ── Session state (observed by AuthViewModel) ─────────────────────────────
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { prefs ->
-        prefs[keyLoggedIn] ?: false
+        prefs[keyLoggedIn] == true &&
+            firebase.isConfigured &&
+            firebase.auth.currentUser != null
     }
 
     val currentUser: Flow<User?> = context.dataStore.data.map { prefs ->
@@ -62,20 +66,25 @@ class AuthRepository @Inject constructor(
             return Result.Error("Email and password are required.")
         }
 
-        val entity = userDao.getUserByEmail(email.trim().lowercase())
-            ?: return Result.Error("No account found with this email address.")
-
-        if (!PasswordUtil.verifyPassword(password, entity.passwordHash)) {
-            return Result.Error("Incorrect password. Please try again.")
+        if (!firebase.isConfigured) {
+            return Result.Error("Firebase is not configured. Add app/google-services.json and rebuild the app.")
         }
 
-        val user = entity.toDomain()
-        persistSession(user)
-        return Result.Success(user)
+        return try {
+            val entity = firebase.signIn(email.trim().lowercase(), password)
+            userDao.insertUser(entity)
+            val user = entity.toDomain()
+            persistSession(user)
+            SyncWorker.triggerManualSync(context)
+            Result.Success(user)
+        } catch (e: Exception) {
+            Result.Error(e.message ?: "Unable to sign in with Firebase.", e)
+        }
     }
 
     // ── Logout ────────────────────────────────────────────────────────────────
     suspend fun logout() {
+        if (firebase.isConfigured) firebase.auth.signOut()
         context.dataStore.edit { prefs -> prefs.clear() }
     }
 

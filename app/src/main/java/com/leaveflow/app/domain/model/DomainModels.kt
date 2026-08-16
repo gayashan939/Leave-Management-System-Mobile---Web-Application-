@@ -69,6 +69,20 @@ data class LeaveSummary(
     val rejected: Int
 )
 
+/**
+ * Domain model for an HR-defined blocked date range.
+ * While a blocked period is active, employees cannot submit leave requests
+ * that overlap with it.
+ */
+data class BlockedDateRange(
+    val id: String,
+    val startDate: String,   // "yyyy-MM-dd"
+    val endDate: String,     // "yyyy-MM-dd"
+    val reason: String,
+    val createdBy: String,   // HR user name
+    val createdAt: Long
+)
+
 /** Generic result wrapper for repository operations. */
 sealed class Result<out T> {
     data class Success<T>(val data: T) : Result<T>()

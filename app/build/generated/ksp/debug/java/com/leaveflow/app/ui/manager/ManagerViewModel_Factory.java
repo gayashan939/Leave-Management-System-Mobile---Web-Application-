@@ -3,10 +3,10 @@ package com.leaveflow.app.ui.manager;
 import com.leaveflow.app.data.repository.LeaveRepository;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
+import dagger.internal.Provider;
 import dagger.internal.QualifierMetadata;
 import dagger.internal.ScopeMetadata;
 import javax.annotation.processing.Generated;
-import javax.inject.Provider;
 
 @ScopeMetadata
 @QualifierMetadata
@@ -20,12 +20,14 @@ import javax.inject.Provider;
     "rawtypes",
     "KotlinInternal",
     "KotlinInternalInJava",
-    "cast"
+    "cast",
+    "deprecation",
+    "nullness:initialization.field.uninitialized"
 })
 public final class ManagerViewModel_Factory implements Factory<ManagerViewModel> {
   private final Provider<LeaveRepository> leaveRepositoryProvider;
 
-  public ManagerViewModel_Factory(Provider<LeaveRepository> leaveRepositoryProvider) {
+  private ManagerViewModel_Factory(Provider<LeaveRepository> leaveRepositoryProvider) {
     this.leaveRepositoryProvider = leaveRepositoryProvider;
   }
 

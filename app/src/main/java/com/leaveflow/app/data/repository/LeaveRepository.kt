@@ -1,6 +1,7 @@
 package com.leaveflow.app.data.repository
 
 import android.content.Context
+import com.leaveflow.app.data.local.dao.BlockedDateDao
 import com.leaveflow.app.data.local.dao.LeaveBalanceDao
 import com.leaveflow.app.data.local.dao.LeaveRequestDao
 import com.leaveflow.app.data.local.dao.SyncQueueDao
@@ -28,6 +29,7 @@ class LeaveRepository @Inject constructor(
     private val leaveRequestDao: LeaveRequestDao,
     private val leaveBalanceDao: LeaveBalanceDao,
     private val syncQueueDao: SyncQueueDao,
+    private val blockedDateDao: BlockedDateDao,
     private val database: AppDatabase
 ) {
 
@@ -78,6 +80,8 @@ class LeaveRepository @Inject constructor(
             return Result.Error("Invalid date format. Use yyyy-MM-dd.")
         if (!DateUtil.isValidRange(startDate, endDate))
             return Result.Error("End date cannot be before start date.")
+        if (!DateUtil.isFutureOrToday(startDate))
+            return Result.Error("Leave cannot be requested for a past date. Please select today or a future date.")
 
         val days = DateUtil.calculateDays(startDate, endDate)
 
@@ -92,6 +96,29 @@ class LeaveRepository @Inject constructor(
             }
             if (days > available)
                 return Result.Error("Insufficient $leaveType leave balance. Available: $available day(s), Requested: $days day(s).")
+        }
+
+        // Occupied-date check — reject if employee already has an active leave overlapping these dates
+        val overlapping = leaveRequestDao.getOverlappingActiveLeave(employeeId, startDate, endDate)
+        if (overlapping != null) {
+            return Result.Error(
+                "You already have a ${overlapping.status.lowercase()} " +
+                "${overlapping.leaveType.lowercase().replaceFirstChar { it.uppercase() }} leave " +
+                "request covering this period (" +
+                "${overlapping.startDate} – ${overlapping.endDate})."
+            )
+        }
+
+        // Blocked-date check — HR may have blocked certain periods
+        val blockedPeriods = blockedDateDao.getAllBlockedDatesOnce()
+        val blocking = blockedPeriods.firstOrNull { blocked ->
+            blocked.startDate <= endDate && blocked.endDate >= startDate
+        }
+        if (blocking != null) {
+            return Result.Error(
+                "Leave submission is blocked from ${blocking.startDate} to ${blocking.endDate}" +
+                (if (blocking.reason.isNotBlank()) ": ${blocking.reason}" else ".")
+            )
         }
 
         val requestId = UUID.randomUUID().toString()

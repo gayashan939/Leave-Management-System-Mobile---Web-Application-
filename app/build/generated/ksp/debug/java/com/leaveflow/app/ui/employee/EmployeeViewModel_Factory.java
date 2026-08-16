@@ -5,10 +5,10 @@ import com.leaveflow.app.data.repository.LeaveRepository;
 import com.leaveflow.app.data.repository.SyncRepository;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
+import dagger.internal.Provider;
 import dagger.internal.QualifierMetadata;
 import dagger.internal.ScopeMetadata;
 import javax.annotation.processing.Generated;
-import javax.inject.Provider;
 
 @ScopeMetadata
 @QualifierMetadata("dagger.hilt.android.qualifiers.ApplicationContext")
@@ -22,7 +22,9 @@ import javax.inject.Provider;
     "rawtypes",
     "KotlinInternal",
     "KotlinInternalInJava",
-    "cast"
+    "cast",
+    "deprecation",
+    "nullness:initialization.field.uninitialized"
 })
 public final class EmployeeViewModel_Factory implements Factory<EmployeeViewModel> {
   private final Provider<Context> contextProvider;
@@ -31,7 +33,7 @@ public final class EmployeeViewModel_Factory implements Factory<EmployeeViewMode
 
   private final Provider<SyncRepository> syncRepositoryProvider;
 
-  public EmployeeViewModel_Factory(Provider<Context> contextProvider,
+  private EmployeeViewModel_Factory(Provider<Context> contextProvider,
       Provider<LeaveRepository> leaveRepositoryProvider,
       Provider<SyncRepository> syncRepositoryProvider) {
     this.contextProvider = contextProvider;

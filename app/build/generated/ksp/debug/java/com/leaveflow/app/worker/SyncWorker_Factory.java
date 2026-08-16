@@ -4,10 +4,10 @@ import android.content.Context;
 import androidx.work.WorkerParameters;
 import com.leaveflow.app.data.repository.SyncRepository;
 import dagger.internal.DaggerGenerated;
+import dagger.internal.Provider;
 import dagger.internal.QualifierMetadata;
 import dagger.internal.ScopeMetadata;
 import javax.annotation.processing.Generated;
-import javax.inject.Provider;
 
 @ScopeMetadata
 @QualifierMetadata
@@ -21,12 +21,14 @@ import javax.inject.Provider;
     "rawtypes",
     "KotlinInternal",
     "KotlinInternalInJava",
-    "cast"
+    "cast",
+    "deprecation",
+    "nullness:initialization.field.uninitialized"
 })
 public final class SyncWorker_Factory {
   private final Provider<SyncRepository> syncRepositoryProvider;
 
-  public SyncWorker_Factory(Provider<SyncRepository> syncRepositoryProvider) {
+  private SyncWorker_Factory(Provider<SyncRepository> syncRepositoryProvider) {
     this.syncRepositoryProvider = syncRepositoryProvider;
   }
 

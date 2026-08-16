@@ -5,10 +5,10 @@ import com.leaveflow.app.data.local.AppDatabase;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
+import dagger.internal.Provider;
 import dagger.internal.QualifierMetadata;
 import dagger.internal.ScopeMetadata;
 import javax.annotation.processing.Generated;
-import javax.inject.Provider;
 
 @ScopeMetadata("javax.inject.Singleton")
 @QualifierMetadata("dagger.hilt.android.qualifiers.ApplicationContext")
@@ -22,12 +22,14 @@ import javax.inject.Provider;
     "rawtypes",
     "KotlinInternal",
     "KotlinInternalInJava",
-    "cast"
+    "cast",
+    "deprecation",
+    "nullness:initialization.field.uninitialized"
 })
 public final class AppModule_ProvideAppDatabaseFactory implements Factory<AppDatabase> {
   private final Provider<Context> contextProvider;
 
-  public AppModule_ProvideAppDatabaseFactory(Provider<Context> contextProvider) {
+  private AppModule_ProvideAppDatabaseFactory(Provider<Context> contextProvider) {
     this.contextProvider = contextProvider;
   }
 

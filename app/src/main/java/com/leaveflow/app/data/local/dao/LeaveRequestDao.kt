@@ -76,4 +76,24 @@ interface LeaveRequestDao {
 
     @Query("SELECT COUNT(*) FROM leave_requests")
     fun getTotalCount(): Flow<Int>
+
+    // ── Overlap check (occupied-date guard) ───────────────────────────────────
+    /**
+     * Returns the first PENDING or APPROVED leave request for [employeeId]
+     * whose date range overlaps with [startDate]..[endDate].
+     * Overlap condition: existing.startDate <= :endDate AND existing.endDate >= :startDate
+     */
+    @Query("""
+        SELECT * FROM leave_requests
+        WHERE employeeId = :employeeId
+          AND status IN ('PENDING', 'APPROVED')
+          AND startDate <= :endDate
+          AND endDate   >= :startDate
+        LIMIT 1
+    """)
+    suspend fun getOverlappingActiveLeave(
+        employeeId: String,
+        startDate: String,
+        endDate: String
+    ): LeaveRequestEntity?
 }

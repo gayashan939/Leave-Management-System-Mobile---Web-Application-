@@ -1,20 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.leaveflow.app-mergeDebugResources-76:/values-v23/values-v23.xml",
+            "outputFile": "com.leaveflow.app-mergeDebugResources-81:/values-v23/values-v23.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\gayas\\.gradle\\caches\\9.0.0\\transforms\\61b03f6495eb1e2063e5342ce0edf1d6\\transformed\\work-runtime-2.9.0\\res\\values-v23\\values-v23.xml",
-                    "from": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,121",
-                        "endColumns": "65,62",
-                        "endOffsets": "116,179"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\gayas\\.gradle\\caches\\9.0.0\\transforms\\dbbad4c2050ee5f8bd1b2ecf5038c74c\\transformed\\appcompat-1.6.1\\res\\values-v23\\values-v23.xml",
+                    "source": "C:\\Users\\gayas\\.gradle\\caches\\9.0.0\\transforms\\0826b76f456c4d481b1a16ea4518f6b4\\transformed\\appcompat-1.6.1\\res\\values-v23\\values-v23.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,20,34,35,36,39,43,44,45,46",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -30,6 +20,16 @@
                         "endLines": "4,5,6,7,21,35,36,37,40,44,45,46,47,51",
                         "endColumns": "134,134,74,86,12,12,118,126,12,12,114,106,112,12",
                         "endOffsets": "314,449,524,611,1349,2099,2218,2345,2567,2791,2906,3013,3126,3356"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\gayas\\.gradle\\caches\\9.0.0\\transforms\\cf76cf9a32646d6e7304973e949ea5ba\\transformed\\work-runtime-2.9.0\\res\\values-v23\\values-v23.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,121",
+                        "endColumns": "65,62",
+                        "endOffsets": "116,179"
                     }
                 }
             ]

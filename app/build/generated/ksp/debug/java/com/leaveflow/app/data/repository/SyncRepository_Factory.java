@@ -1,17 +1,19 @@
 package com.leaveflow.app.data.repository;
 
-import android.content.Context;
+import com.leaveflow.app.data.firebase.FirebaseService;
+import com.leaveflow.app.data.local.dao.LeaveBalanceDao;
+import com.leaveflow.app.data.local.dao.LeaveRequestDao;
 import com.leaveflow.app.data.local.dao.SyncQueueDao;
-import com.leaveflow.app.data.remote.ApiService;
+import com.leaveflow.app.data.local.dao.UserDao;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
+import dagger.internal.Provider;
 import dagger.internal.QualifierMetadata;
 import dagger.internal.ScopeMetadata;
 import javax.annotation.processing.Generated;
-import javax.inject.Provider;
 
 @ScopeMetadata("javax.inject.Singleton")
-@QualifierMetadata("dagger.hilt.android.qualifiers.ApplicationContext")
+@QualifierMetadata
 @DaggerGenerated
 @Generated(
     value = "dagger.internal.codegen.ComponentProcessor",
@@ -22,39 +24,52 @@ import javax.inject.Provider;
     "rawtypes",
     "KotlinInternal",
     "KotlinInternalInJava",
-    "cast"
+    "cast",
+    "deprecation",
+    "nullness:initialization.field.uninitialized"
 })
 public final class SyncRepository_Factory implements Factory<SyncRepository> {
-  private final Provider<Context> contextProvider;
-
   private final Provider<SyncQueueDao> syncQueueDaoProvider;
+
+  private final Provider<LeaveRequestDao> leaveRequestDaoProvider;
+
+  private final Provider<LeaveBalanceDao> leaveBalanceDaoProvider;
+
+  private final Provider<UserDao> userDaoProvider;
 
   private final Provider<LeaveRepository> leaveRepositoryProvider;
 
-  private final Provider<ApiService> apiServiceProvider;
+  private final Provider<FirebaseService> firebaseProvider;
 
-  public SyncRepository_Factory(Provider<Context> contextProvider,
-      Provider<SyncQueueDao> syncQueueDaoProvider,
-      Provider<LeaveRepository> leaveRepositoryProvider, Provider<ApiService> apiServiceProvider) {
-    this.contextProvider = contextProvider;
+  private SyncRepository_Factory(Provider<SyncQueueDao> syncQueueDaoProvider,
+      Provider<LeaveRequestDao> leaveRequestDaoProvider,
+      Provider<LeaveBalanceDao> leaveBalanceDaoProvider, Provider<UserDao> userDaoProvider,
+      Provider<LeaveRepository> leaveRepositoryProvider,
+      Provider<FirebaseService> firebaseProvider) {
     this.syncQueueDaoProvider = syncQueueDaoProvider;
+    this.leaveRequestDaoProvider = leaveRequestDaoProvider;
+    this.leaveBalanceDaoProvider = leaveBalanceDaoProvider;
+    this.userDaoProvider = userDaoProvider;
     this.leaveRepositoryProvider = leaveRepositoryProvider;
-    this.apiServiceProvider = apiServiceProvider;
+    this.firebaseProvider = firebaseProvider;
   }
 
   @Override
   public SyncRepository get() {
-    return newInstance(contextProvider.get(), syncQueueDaoProvider.get(), leaveRepositoryProvider.get(), apiServiceProvider.get());
+    return newInstance(syncQueueDaoProvider.get(), leaveRequestDaoProvider.get(), leaveBalanceDaoProvider.get(), userDaoProvider.get(), leaveRepositoryProvider.get(), firebaseProvider.get());
   }
 
-  public static SyncRepository_Factory create(Provider<Context> contextProvider,
-      Provider<SyncQueueDao> syncQueueDaoProvider,
-      Provider<LeaveRepository> leaveRepositoryProvider, Provider<ApiService> apiServiceProvider) {
-    return new SyncRepository_Factory(contextProvider, syncQueueDaoProvider, leaveRepositoryProvider, apiServiceProvider);
+  public static SyncRepository_Factory create(Provider<SyncQueueDao> syncQueueDaoProvider,
+      Provider<LeaveRequestDao> leaveRequestDaoProvider,
+      Provider<LeaveBalanceDao> leaveBalanceDaoProvider, Provider<UserDao> userDaoProvider,
+      Provider<LeaveRepository> leaveRepositoryProvider,
+      Provider<FirebaseService> firebaseProvider) {
+    return new SyncRepository_Factory(syncQueueDaoProvider, leaveRequestDaoProvider, leaveBalanceDaoProvider, userDaoProvider, leaveRepositoryProvider, firebaseProvider);
   }
 
-  public static SyncRepository newInstance(Context context, SyncQueueDao syncQueueDao,
-      LeaveRepository leaveRepository, ApiService apiService) {
-    return new SyncRepository(context, syncQueueDao, leaveRepository, apiService);
+  public static SyncRepository newInstance(SyncQueueDao syncQueueDao,
+      LeaveRequestDao leaveRequestDao, LeaveBalanceDao leaveBalanceDao, UserDao userDao,
+      LeaveRepository leaveRepository, FirebaseService firebase) {
+    return new SyncRepository(syncQueueDao, leaveRequestDao, leaveBalanceDao, userDao, leaveRepository, firebase);
   }
 }

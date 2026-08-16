@@ -5,10 +5,10 @@ import com.leaveflow.app.data.local.dao.LeaveBalanceDao;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
+import dagger.internal.Provider;
 import dagger.internal.QualifierMetadata;
 import dagger.internal.ScopeMetadata;
 import javax.annotation.processing.Generated;
-import javax.inject.Provider;
 
 @ScopeMetadata
 @QualifierMetadata
@@ -22,12 +22,14 @@ import javax.inject.Provider;
     "rawtypes",
     "KotlinInternal",
     "KotlinInternalInJava",
-    "cast"
+    "cast",
+    "deprecation",
+    "nullness:initialization.field.uninitialized"
 })
 public final class AppModule_ProvideLeaveBalanceDaoFactory implements Factory<LeaveBalanceDao> {
   private final Provider<AppDatabase> dbProvider;
 
-  public AppModule_ProvideLeaveBalanceDaoFactory(Provider<AppDatabase> dbProvider) {
+  private AppModule_ProvideLeaveBalanceDaoFactory(Provider<AppDatabase> dbProvider) {
     this.dbProvider = dbProvider;
   }
 

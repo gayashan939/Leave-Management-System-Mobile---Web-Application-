@@ -12,29 +12,42 @@ import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 import androidx.work.ListenableWorker;
 import androidx.work.WorkerParameters;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.leaveflow.app.data.firebase.FirebaseService;
 import com.leaveflow.app.data.local.AppDatabase;
+import com.leaveflow.app.data.local.dao.BlockedDateDao;
 import com.leaveflow.app.data.local.dao.LeaveBalanceDao;
 import com.leaveflow.app.data.local.dao.LeaveRequestDao;
 import com.leaveflow.app.data.local.dao.SyncQueueDao;
 import com.leaveflow.app.data.local.dao.UserDao;
-import com.leaveflow.app.data.remote.ApiService;
 import com.leaveflow.app.data.repository.AuthRepository;
+import com.leaveflow.app.data.repository.BlockedDateRepository;
 import com.leaveflow.app.data.repository.LeaveRepository;
 import com.leaveflow.app.data.repository.SyncRepository;
-import com.leaveflow.app.di.AppModule_ProvideApiServiceFactory;
 import com.leaveflow.app.di.AppModule_ProvideAppDatabaseFactory;
+import com.leaveflow.app.di.AppModule_ProvideBlockedDateDaoFactory;
 import com.leaveflow.app.di.AppModule_ProvideLeaveBalanceDaoFactory;
 import com.leaveflow.app.di.AppModule_ProvideLeaveRequestDaoFactory;
 import com.leaveflow.app.di.AppModule_ProvideSyncQueueDaoFactory;
 import com.leaveflow.app.di.AppModule_ProvideUserDaoFactory;
 import com.leaveflow.app.ui.auth.AuthViewModel;
 import com.leaveflow.app.ui.auth.AuthViewModel_HiltModules;
+import com.leaveflow.app.ui.auth.AuthViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.leaveflow.app.ui.auth.AuthViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
 import com.leaveflow.app.ui.employee.EmployeeViewModel;
 import com.leaveflow.app.ui.employee.EmployeeViewModel_HiltModules;
+import com.leaveflow.app.ui.employee.EmployeeViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.leaveflow.app.ui.employee.EmployeeViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
 import com.leaveflow.app.ui.hr.HRViewModel;
 import com.leaveflow.app.ui.hr.HRViewModel_HiltModules;
+import com.leaveflow.app.ui.hr.HRViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.leaveflow.app.ui.hr.HRViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
 import com.leaveflow.app.ui.manager.ManagerViewModel;
 import com.leaveflow.app.ui.manager.ManagerViewModel_HiltModules;
+import com.leaveflow.app.ui.manager.ManagerViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.leaveflow.app.ui.manager.ManagerViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
 import com.leaveflow.app.worker.SyncWorker;
 import com.leaveflow.app.worker.SyncWorker_AssistedFactory;
 import dagger.hilt.android.ActivityRetainedLifecycle;
@@ -54,14 +67,10 @@ import dagger.hilt.android.internal.modules.ApplicationContextModule;
 import dagger.hilt.android.internal.modules.ApplicationContextModule_ProvideContextFactory;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.DoubleCheck;
-import dagger.internal.IdentifierNameString;
-import dagger.internal.KeepFieldType;
 import dagger.internal.LazyClassKeyMap;
-import dagger.internal.MapBuilder;
 import dagger.internal.Preconditions;
 import dagger.internal.Provider;
 import dagger.internal.SingleCheck;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.Generated;
@@ -76,7 +85,9 @@ import javax.annotation.processing.Generated;
     "rawtypes",
     "KotlinInternal",
     "KotlinInternalInJava",
-    "cast"
+    "cast",
+    "deprecation",
+    "nullness:initialization.field.uninitialized"
 })
 public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
   private DaggerLeaveFlowApplication_HiltComponents_SingletonC() {
@@ -311,7 +322,7 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
 
     private final ViewWithFragmentCImpl viewWithFragmentCImpl = this;
 
-    private ViewWithFragmentCImpl(SingletonCImpl singletonCImpl,
+    ViewWithFragmentCImpl(SingletonCImpl singletonCImpl,
         ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl,
         FragmentCImpl fragmentCImpl, View viewParam) {
       this.singletonCImpl = singletonCImpl;
@@ -332,9 +343,8 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
 
     private final FragmentCImpl fragmentCImpl = this;
 
-    private FragmentCImpl(SingletonCImpl singletonCImpl,
-        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl,
-        Fragment fragmentParam) {
+    FragmentCImpl(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+        ActivityCImpl activityCImpl, Fragment fragmentParam) {
       this.singletonCImpl = singletonCImpl;
       this.activityRetainedCImpl = activityRetainedCImpl;
       this.activityCImpl = activityCImpl;
@@ -362,7 +372,7 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
 
     private final ViewCImpl viewCImpl = this;
 
-    private ViewCImpl(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+    ViewCImpl(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
         ActivityCImpl activityCImpl, View viewParam) {
       this.singletonCImpl = singletonCImpl;
       this.activityRetainedCImpl = activityRetainedCImpl;
@@ -379,8 +389,8 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
 
     private final ActivityCImpl activityCImpl = this;
 
-    private ActivityCImpl(SingletonCImpl singletonCImpl,
-        ActivityRetainedCImpl activityRetainedCImpl, Activity activityParam) {
+    ActivityCImpl(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+        Activity activityParam) {
       this.singletonCImpl = singletonCImpl;
       this.activityRetainedCImpl = activityRetainedCImpl;
 
@@ -398,7 +408,7 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
 
     @Override
     public Map<Class<?>, Boolean> getViewModelKeys() {
-      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(4).put(LazyClassKeyProvider.com_leaveflow_app_ui_auth_AuthViewModel, AuthViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_leaveflow_app_ui_employee_EmployeeViewModel, EmployeeViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_leaveflow_app_ui_hr_HRViewModel, HRViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_leaveflow_app_ui_manager_ManagerViewModel, ManagerViewModel_HiltModules.KeyModule.provide()).build());
+      return LazyClassKeyMap.<Boolean>of(ImmutableMap.<String, Boolean>of(AuthViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AuthViewModel_HiltModules.KeyModule.provide(), EmployeeViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, EmployeeViewModel_HiltModules.KeyModule.provide(), HRViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, HRViewModel_HiltModules.KeyModule.provide(), ManagerViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, ManagerViewModel_HiltModules.KeyModule.provide()));
     }
 
     @Override
@@ -415,29 +425,6 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
     public ViewComponentBuilder viewComponentBuilder() {
       return new ViewCBuilder(singletonCImpl, activityRetainedCImpl, activityCImpl);
     }
-
-    @IdentifierNameString
-    private static final class LazyClassKeyProvider {
-      static String com_leaveflow_app_ui_employee_EmployeeViewModel = "com.leaveflow.app.ui.employee.EmployeeViewModel";
-
-      static String com_leaveflow_app_ui_hr_HRViewModel = "com.leaveflow.app.ui.hr.HRViewModel";
-
-      static String com_leaveflow_app_ui_manager_ManagerViewModel = "com.leaveflow.app.ui.manager.ManagerViewModel";
-
-      static String com_leaveflow_app_ui_auth_AuthViewModel = "com.leaveflow.app.ui.auth.AuthViewModel";
-
-      @KeepFieldType
-      EmployeeViewModel com_leaveflow_app_ui_employee_EmployeeViewModel2;
-
-      @KeepFieldType
-      HRViewModel com_leaveflow_app_ui_hr_HRViewModel2;
-
-      @KeepFieldType
-      ManagerViewModel com_leaveflow_app_ui_manager_ManagerViewModel2;
-
-      @KeepFieldType
-      AuthViewModel com_leaveflow_app_ui_auth_AuthViewModel2;
-    }
   }
 
   private static final class ViewModelCImpl extends LeaveFlowApplication_HiltComponents.ViewModelC {
@@ -447,17 +434,16 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
 
     private final ViewModelCImpl viewModelCImpl = this;
 
-    private Provider<AuthViewModel> authViewModelProvider;
+    Provider<AuthViewModel> authViewModelProvider;
 
-    private Provider<EmployeeViewModel> employeeViewModelProvider;
+    Provider<EmployeeViewModel> employeeViewModelProvider;
 
-    private Provider<HRViewModel> hRViewModelProvider;
+    Provider<HRViewModel> hRViewModelProvider;
 
-    private Provider<ManagerViewModel> managerViewModelProvider;
+    Provider<ManagerViewModel> managerViewModelProvider;
 
-    private ViewModelCImpl(SingletonCImpl singletonCImpl,
-        ActivityRetainedCImpl activityRetainedCImpl, SavedStateHandle savedStateHandleParam,
-        ViewModelLifecycle viewModelLifecycleParam) {
+    ViewModelCImpl(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+        SavedStateHandle savedStateHandleParam, ViewModelLifecycle viewModelLifecycleParam) {
       this.singletonCImpl = singletonCImpl;
       this.activityRetainedCImpl = activityRetainedCImpl;
 
@@ -476,35 +462,12 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
 
     @Override
     public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
-      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(4).put(LazyClassKeyProvider.com_leaveflow_app_ui_auth_AuthViewModel, ((Provider) authViewModelProvider)).put(LazyClassKeyProvider.com_leaveflow_app_ui_employee_EmployeeViewModel, ((Provider) employeeViewModelProvider)).put(LazyClassKeyProvider.com_leaveflow_app_ui_hr_HRViewModel, ((Provider) hRViewModelProvider)).put(LazyClassKeyProvider.com_leaveflow_app_ui_manager_ManagerViewModel, ((Provider) managerViewModelProvider)).build());
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(ImmutableMap.<String, javax.inject.Provider<ViewModel>>of(AuthViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) (authViewModelProvider)), EmployeeViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) (employeeViewModelProvider)), HRViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) (hRViewModelProvider)), ManagerViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) (managerViewModelProvider))));
     }
 
     @Override
     public Map<Class<?>, Object> getHiltViewModelAssistedMap() {
-      return Collections.<Class<?>, Object>emptyMap();
-    }
-
-    @IdentifierNameString
-    private static final class LazyClassKeyProvider {
-      static String com_leaveflow_app_ui_auth_AuthViewModel = "com.leaveflow.app.ui.auth.AuthViewModel";
-
-      static String com_leaveflow_app_ui_hr_HRViewModel = "com.leaveflow.app.ui.hr.HRViewModel";
-
-      static String com_leaveflow_app_ui_employee_EmployeeViewModel = "com.leaveflow.app.ui.employee.EmployeeViewModel";
-
-      static String com_leaveflow_app_ui_manager_ManagerViewModel = "com.leaveflow.app.ui.manager.ManagerViewModel";
-
-      @KeepFieldType
-      AuthViewModel com_leaveflow_app_ui_auth_AuthViewModel2;
-
-      @KeepFieldType
-      HRViewModel com_leaveflow_app_ui_hr_HRViewModel2;
-
-      @KeepFieldType
-      EmployeeViewModel com_leaveflow_app_ui_employee_EmployeeViewModel2;
-
-      @KeepFieldType
-      ManagerViewModel com_leaveflow_app_ui_manager_ManagerViewModel2;
+      return ImmutableMap.<Class<?>, Object>of();
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -524,20 +487,20 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
         this.id = id;
       }
 
-      @SuppressWarnings("unchecked")
       @Override
+      @SuppressWarnings("unchecked")
       public T get() {
         switch (id) {
-          case 0: // com.leaveflow.app.ui.auth.AuthViewModel 
+          case 0: // com.leaveflow.app.ui.auth.AuthViewModel
           return (T) new AuthViewModel(singletonCImpl.authRepositoryProvider.get());
 
-          case 1: // com.leaveflow.app.ui.employee.EmployeeViewModel 
+          case 1: // com.leaveflow.app.ui.employee.EmployeeViewModel
           return (T) new EmployeeViewModel(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.leaveRepositoryProvider.get(), singletonCImpl.syncRepositoryProvider.get());
 
-          case 2: // com.leaveflow.app.ui.hr.HRViewModel 
-          return (T) new HRViewModel(singletonCImpl.leaveRepositoryProvider.get());
+          case 2: // com.leaveflow.app.ui.hr.HRViewModel
+          return (T) new HRViewModel(singletonCImpl.leaveRepositoryProvider.get(), singletonCImpl.blockedDateRepositoryProvider.get());
 
-          case 3: // com.leaveflow.app.ui.manager.ManagerViewModel 
+          case 3: // com.leaveflow.app.ui.manager.ManagerViewModel
           return (T) new ManagerViewModel(singletonCImpl.leaveRepositoryProvider.get());
 
           default: throw new AssertionError(id);
@@ -551,9 +514,9 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
 
     private final ActivityRetainedCImpl activityRetainedCImpl = this;
 
-    private Provider<ActivityRetainedLifecycle> provideActivityRetainedLifecycleProvider;
+    Provider<ActivityRetainedLifecycle> provideActivityRetainedLifecycleProvider;
 
-    private ActivityRetainedCImpl(SingletonCImpl singletonCImpl,
+    ActivityRetainedCImpl(SingletonCImpl singletonCImpl,
         SavedStateHandleHolder savedStateHandleHolderParam) {
       this.singletonCImpl = singletonCImpl;
 
@@ -590,11 +553,11 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
         this.id = id;
       }
 
-      @SuppressWarnings("unchecked")
       @Override
+      @SuppressWarnings("unchecked")
       public T get() {
         switch (id) {
-          case 0: // dagger.hilt.android.ActivityRetainedLifecycle 
+          case 0: // dagger.hilt.android.ActivityRetainedLifecycle
           return (T) ActivityRetainedComponentManager_LifecycleModule_ProvideActivityRetainedLifecycleFactory.provideActivityRetainedLifecycle();
 
           default: throw new AssertionError(id);
@@ -608,7 +571,7 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
 
     private final ServiceCImpl serviceCImpl = this;
 
-    private ServiceCImpl(SingletonCImpl singletonCImpl, Service serviceParam) {
+    ServiceCImpl(SingletonCImpl singletonCImpl, Service serviceParam) {
       this.singletonCImpl = singletonCImpl;
 
 
@@ -620,57 +583,64 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
 
     private final SingletonCImpl singletonCImpl = this;
 
-    private Provider<AppDatabase> provideAppDatabaseProvider;
+    Provider<AppDatabase> provideAppDatabaseProvider;
 
-    private Provider<LeaveRepository> leaveRepositoryProvider;
+    Provider<LeaveRepository> leaveRepositoryProvider;
 
-    private Provider<ApiService> provideApiServiceProvider;
+    Provider<FirebaseService> firebaseServiceProvider;
 
-    private Provider<SyncRepository> syncRepositoryProvider;
+    Provider<SyncRepository> syncRepositoryProvider;
 
-    private Provider<SyncWorker_AssistedFactory> syncWorker_AssistedFactoryProvider;
+    Provider<SyncWorker_AssistedFactory> syncWorker_AssistedFactoryProvider;
 
-    private Provider<AuthRepository> authRepositoryProvider;
+    Provider<AuthRepository> authRepositoryProvider;
 
-    private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
+    Provider<BlockedDateRepository> blockedDateRepositoryProvider;
+
+    SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
       this.applicationContextModule = applicationContextModuleParam;
       initialize(applicationContextModuleParam);
 
     }
 
-    private SyncQueueDao syncQueueDao() {
+    SyncQueueDao syncQueueDao() {
       return AppModule_ProvideSyncQueueDaoFactory.provideSyncQueueDao(provideAppDatabaseProvider.get());
     }
 
-    private LeaveRequestDao leaveRequestDao() {
+    LeaveRequestDao leaveRequestDao() {
       return AppModule_ProvideLeaveRequestDaoFactory.provideLeaveRequestDao(provideAppDatabaseProvider.get());
     }
 
-    private LeaveBalanceDao leaveBalanceDao() {
+    LeaveBalanceDao leaveBalanceDao() {
       return AppModule_ProvideLeaveBalanceDaoFactory.provideLeaveBalanceDao(provideAppDatabaseProvider.get());
     }
 
-    private Map<String, javax.inject.Provider<WorkerAssistedFactory<? extends ListenableWorker>>> mapOfStringAndProviderOfWorkerAssistedFactoryOf(
-        ) {
-      return Collections.<String, javax.inject.Provider<WorkerAssistedFactory<? extends ListenableWorker>>>singletonMap("com.leaveflow.app.worker.SyncWorker", ((Provider) syncWorker_AssistedFactoryProvider));
-    }
-
-    private HiltWorkerFactory hiltWorkerFactory() {
-      return WorkerFactoryModule_ProvideFactoryFactory.provideFactory(mapOfStringAndProviderOfWorkerAssistedFactoryOf());
-    }
-
-    private UserDao userDao() {
+    UserDao userDao() {
       return AppModule_ProvideUserDaoFactory.provideUserDao(provideAppDatabaseProvider.get());
+    }
+
+    BlockedDateDao blockedDateDao() {
+      return AppModule_ProvideBlockedDateDaoFactory.provideBlockedDateDao(provideAppDatabaseProvider.get());
+    }
+
+    Map<String, javax.inject.Provider<WorkerAssistedFactory<? extends ListenableWorker>>> mapOfStringAndProviderOfWorkerAssistedFactoryOf(
+        ) {
+      return ImmutableMap.<String, javax.inject.Provider<WorkerAssistedFactory<? extends ListenableWorker>>>of("com.leaveflow.app.worker.SyncWorker", ((Provider) (syncWorker_AssistedFactoryProvider)));
+    }
+
+    HiltWorkerFactory hiltWorkerFactory() {
+      return WorkerFactoryModule_ProvideFactoryFactory.provideFactory(mapOfStringAndProviderOfWorkerAssistedFactoryOf());
     }
 
     @SuppressWarnings("unchecked")
     private void initialize(final ApplicationContextModule applicationContextModuleParam) {
       this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 2));
       this.leaveRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<LeaveRepository>(singletonCImpl, 3));
-      this.provideApiServiceProvider = DoubleCheck.provider(new SwitchingProvider<ApiService>(singletonCImpl, 4));
+      this.firebaseServiceProvider = DoubleCheck.provider(new SwitchingProvider<FirebaseService>(singletonCImpl, 4));
       this.syncRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<SyncRepository>(singletonCImpl, 1));
       this.syncWorker_AssistedFactoryProvider = SingleCheck.provider(new SwitchingProvider<SyncWorker_AssistedFactory>(singletonCImpl, 0));
       this.authRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<AuthRepository>(singletonCImpl, 5));
+      this.blockedDateRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<BlockedDateRepository>(singletonCImpl, 6));
     }
 
     @Override
@@ -680,7 +650,7 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
 
     @Override
     public Set<Boolean> getDisableFragmentGetContextFix() {
-      return Collections.<Boolean>emptySet();
+      return ImmutableSet.<Boolean>of();
     }
 
     @Override
@@ -693,8 +663,10 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
       return new ServiceCBuilder(singletonCImpl);
     }
 
+    @CanIgnoreReturnValue
     private LeaveFlowApplication injectLeaveFlowApplication2(LeaveFlowApplication instance) {
       LeaveFlowApplication_MembersInjector.injectWorkerFactory(instance, hiltWorkerFactory());
+      LeaveFlowApplication_MembersInjector.injectSyncRepository(instance, syncRepositoryProvider.get());
       return instance;
     }
 
@@ -708,11 +680,11 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
         this.id = id;
       }
 
-      @SuppressWarnings("unchecked")
       @Override
+      @SuppressWarnings("unchecked")
       public T get() {
         switch (id) {
-          case 0: // com.leaveflow.app.worker.SyncWorker_AssistedFactory 
+          case 0: // com.leaveflow.app.worker.SyncWorker_AssistedFactory
           return (T) new SyncWorker_AssistedFactory() {
             @Override
             public SyncWorker create(Context context, WorkerParameters workerParams) {
@@ -720,20 +692,23 @@ public final class DaggerLeaveFlowApplication_HiltComponents_SingletonC {
             }
           };
 
-          case 1: // com.leaveflow.app.data.repository.SyncRepository 
-          return (T) new SyncRepository(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.syncQueueDao(), singletonCImpl.leaveRepositoryProvider.get(), singletonCImpl.provideApiServiceProvider.get());
+          case 1: // com.leaveflow.app.data.repository.SyncRepository
+          return (T) new SyncRepository(singletonCImpl.syncQueueDao(), singletonCImpl.leaveRequestDao(), singletonCImpl.leaveBalanceDao(), singletonCImpl.userDao(), singletonCImpl.leaveRepositoryProvider.get(), singletonCImpl.firebaseServiceProvider.get());
 
-          case 2: // com.leaveflow.app.data.local.AppDatabase 
+          case 2: // com.leaveflow.app.data.local.AppDatabase
           return (T) AppModule_ProvideAppDatabaseFactory.provideAppDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 3: // com.leaveflow.app.data.repository.LeaveRepository 
-          return (T) new LeaveRepository(singletonCImpl.leaveRequestDao(), singletonCImpl.leaveBalanceDao(), singletonCImpl.syncQueueDao());
+          case 3: // com.leaveflow.app.data.repository.LeaveRepository
+          return (T) new LeaveRepository(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.leaveRequestDao(), singletonCImpl.leaveBalanceDao(), singletonCImpl.syncQueueDao(), singletonCImpl.blockedDateDao(), singletonCImpl.provideAppDatabaseProvider.get());
 
-          case 4: // com.leaveflow.app.data.remote.ApiService 
-          return (T) AppModule_ProvideApiServiceFactory.provideApiService();
+          case 4: // com.leaveflow.app.data.firebase.FirebaseService
+          return (T) new FirebaseService(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 5: // com.leaveflow.app.data.repository.AuthRepository 
-          return (T) new AuthRepository(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.userDao());
+          case 5: // com.leaveflow.app.data.repository.AuthRepository
+          return (T) new AuthRepository(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.userDao(), singletonCImpl.firebaseServiceProvider.get());
+
+          case 6: // com.leaveflow.app.data.repository.BlockedDateRepository
+          return (T) new BlockedDateRepository(singletonCImpl.blockedDateDao());
 
           default: throw new AssertionError(id);
         }

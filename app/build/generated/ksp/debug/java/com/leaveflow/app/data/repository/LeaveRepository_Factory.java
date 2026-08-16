@@ -1,17 +1,20 @@
 package com.leaveflow.app.data.repository;
 
+import android.content.Context;
+import com.leaveflow.app.data.local.AppDatabase;
+import com.leaveflow.app.data.local.dao.BlockedDateDao;
 import com.leaveflow.app.data.local.dao.LeaveBalanceDao;
 import com.leaveflow.app.data.local.dao.LeaveRequestDao;
 import com.leaveflow.app.data.local.dao.SyncQueueDao;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
+import dagger.internal.Provider;
 import dagger.internal.QualifierMetadata;
 import dagger.internal.ScopeMetadata;
 import javax.annotation.processing.Generated;
-import javax.inject.Provider;
 
 @ScopeMetadata("javax.inject.Singleton")
-@QualifierMetadata
+@QualifierMetadata("dagger.hilt.android.qualifiers.ApplicationContext")
 @DaggerGenerated
 @Generated(
     value = "dagger.internal.codegen.ComponentProcessor",
@@ -22,36 +25,52 @@ import javax.inject.Provider;
     "rawtypes",
     "KotlinInternal",
     "KotlinInternalInJava",
-    "cast"
+    "cast",
+    "deprecation",
+    "nullness:initialization.field.uninitialized"
 })
 public final class LeaveRepository_Factory implements Factory<LeaveRepository> {
+  private final Provider<Context> contextProvider;
+
   private final Provider<LeaveRequestDao> leaveRequestDaoProvider;
 
   private final Provider<LeaveBalanceDao> leaveBalanceDaoProvider;
 
   private final Provider<SyncQueueDao> syncQueueDaoProvider;
 
-  public LeaveRepository_Factory(Provider<LeaveRequestDao> leaveRequestDaoProvider,
+  private final Provider<BlockedDateDao> blockedDateDaoProvider;
+
+  private final Provider<AppDatabase> databaseProvider;
+
+  private LeaveRepository_Factory(Provider<Context> contextProvider,
+      Provider<LeaveRequestDao> leaveRequestDaoProvider,
       Provider<LeaveBalanceDao> leaveBalanceDaoProvider,
-      Provider<SyncQueueDao> syncQueueDaoProvider) {
+      Provider<SyncQueueDao> syncQueueDaoProvider, Provider<BlockedDateDao> blockedDateDaoProvider,
+      Provider<AppDatabase> databaseProvider) {
+    this.contextProvider = contextProvider;
     this.leaveRequestDaoProvider = leaveRequestDaoProvider;
     this.leaveBalanceDaoProvider = leaveBalanceDaoProvider;
     this.syncQueueDaoProvider = syncQueueDaoProvider;
+    this.blockedDateDaoProvider = blockedDateDaoProvider;
+    this.databaseProvider = databaseProvider;
   }
 
   @Override
   public LeaveRepository get() {
-    return newInstance(leaveRequestDaoProvider.get(), leaveBalanceDaoProvider.get(), syncQueueDaoProvider.get());
+    return newInstance(contextProvider.get(), leaveRequestDaoProvider.get(), leaveBalanceDaoProvider.get(), syncQueueDaoProvider.get(), blockedDateDaoProvider.get(), databaseProvider.get());
   }
 
-  public static LeaveRepository_Factory create(Provider<LeaveRequestDao> leaveRequestDaoProvider,
+  public static LeaveRepository_Factory create(Provider<Context> contextProvider,
+      Provider<LeaveRequestDao> leaveRequestDaoProvider,
       Provider<LeaveBalanceDao> leaveBalanceDaoProvider,
-      Provider<SyncQueueDao> syncQueueDaoProvider) {
-    return new LeaveRepository_Factory(leaveRequestDaoProvider, leaveBalanceDaoProvider, syncQueueDaoProvider);
+      Provider<SyncQueueDao> syncQueueDaoProvider, Provider<BlockedDateDao> blockedDateDaoProvider,
+      Provider<AppDatabase> databaseProvider) {
+    return new LeaveRepository_Factory(contextProvider, leaveRequestDaoProvider, leaveBalanceDaoProvider, syncQueueDaoProvider, blockedDateDaoProvider, databaseProvider);
   }
 
-  public static LeaveRepository newInstance(LeaveRequestDao leaveRequestDao,
-      LeaveBalanceDao leaveBalanceDao, SyncQueueDao syncQueueDao) {
-    return new LeaveRepository(leaveRequestDao, leaveBalanceDao, syncQueueDao);
+  public static LeaveRepository newInstance(Context context, LeaveRequestDao leaveRequestDao,
+      LeaveBalanceDao leaveBalanceDao, SyncQueueDao syncQueueDao, BlockedDateDao blockedDateDao,
+      AppDatabase database) {
+    return new LeaveRepository(context, leaveRequestDao, leaveBalanceDao, syncQueueDao, blockedDateDao, database);
   }
 }

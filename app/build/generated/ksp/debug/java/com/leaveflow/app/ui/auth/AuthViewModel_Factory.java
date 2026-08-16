@@ -3,10 +3,10 @@ package com.leaveflow.app.ui.auth;
 import com.leaveflow.app.data.repository.AuthRepository;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
+import dagger.internal.Provider;
 import dagger.internal.QualifierMetadata;
 import dagger.internal.ScopeMetadata;
 import javax.annotation.processing.Generated;
-import javax.inject.Provider;
 
 @ScopeMetadata
 @QualifierMetadata
@@ -20,12 +20,14 @@ import javax.inject.Provider;
     "rawtypes",
     "KotlinInternal",
     "KotlinInternalInJava",
-    "cast"
+    "cast",
+    "deprecation",
+    "nullness:initialization.field.uninitialized"
 })
 public final class AuthViewModel_Factory implements Factory<AuthViewModel> {
   private final Provider<AuthRepository> authRepositoryProvider;
 
-  public AuthViewModel_Factory(Provider<AuthRepository> authRepositoryProvider) {
+  private AuthViewModel_Factory(Provider<AuthRepository> authRepositoryProvider) {
     this.authRepositoryProvider = authRepositoryProvider;
   }
 

@@ -13,10 +13,16 @@
     <string name="error_location_denied">Location permission denied. GPS features are disabled.</string>
     <string name="error_login_failed">Invalid email or password. Please try again.</string>
     <string name="error_network_unavailable">No internet connection. Changes will sync when online.</string>
+    <string name="gcm_defaultSenderId" translatable="false">571364396887</string>
+    <string name="google_api_key" translatable="false">AIzaSyBMbV7mgj97K5CsDFQ_2EKPTKZDV1sAq1k</string>
+    <string name="google_app_id" translatable="false">1:571364396887:android:7f2d0403f5b846a9e6f812</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBMbV7mgj97K5CsDFQ_2EKPTKZDV1sAq1k</string>
+    <string name="google_storage_bucket" translatable="false">leaveflow-lk.firebasestorage.app</string>
     <string name="leave_annual">Annual Leave</string>
     <string name="leave_casual">Casual Leave</string>
     <string name="leave_medical">Medical Leave</string>
     <string name="leave_nopay">No-Pay Leave</string>
+    <string name="project_id" translatable="false">leaveflow-lk</string>
     <string name="status_approved">Approved</string>
     <string name="status_pending">Pending</string>
     <string name="status_rejected">Rejected</string>

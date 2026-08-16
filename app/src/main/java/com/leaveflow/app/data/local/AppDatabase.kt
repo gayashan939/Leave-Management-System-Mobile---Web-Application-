@@ -6,10 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
+import com.leaveflow.app.data.local.dao.BlockedDateDao
 import com.leaveflow.app.data.local.dao.LeaveBalanceDao
 import com.leaveflow.app.data.local.dao.LeaveRequestDao
 import com.leaveflow.app.data.local.dao.SyncQueueDao
 import com.leaveflow.app.data.local.dao.UserDao
+import com.leaveflow.app.data.local.entity.BlockedDateEntity
 import com.leaveflow.app.data.local.entity.LeaveBalanceEntity
 import com.leaveflow.app.data.local.entity.LeaveRequestEntity
 import com.leaveflow.app.data.local.entity.SyncQueueEntity
@@ -25,9 +27,10 @@ import java.util.*
         UserEntity::class,
         LeaveRequestEntity::class,
         LeaveBalanceEntity::class,
-        SyncQueueEntity::class
+        SyncQueueEntity::class,
+        BlockedDateEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -36,6 +39,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun leaveRequestDao(): LeaveRequestDao
     abstract fun leaveBalanceDao(): LeaveBalanceDao
     abstract fun syncQueueDao(): SyncQueueDao
+    abstract fun blockedDateDao(): BlockedDateDao
 
     companion object {
         const val DATABASE_NAME = "leaveflow_db"
@@ -50,7 +54,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     DATABASE_NAME
                 )
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .addCallback(SeedCallback(context))
                     .build()
                 INSTANCE = instance
@@ -62,6 +66,22 @@ abstract class AppDatabase : RoomDatabase() {
         private val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("UPDATE users SET passwordHash = ''")
+            }
+        }
+
+        /** Creates the leave_blocked_dates table introduced in version 3. */
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS leave_blocked_dates (
+                        id        TEXT NOT NULL PRIMARY KEY,
+                        startDate TEXT NOT NULL,
+                        endDate   TEXT NOT NULL,
+                        reason    TEXT NOT NULL,
+                        createdBy TEXT NOT NULL,
+                        createdAt INTEGER NOT NULL DEFAULT 0
+                    )
+                """)
             }
         }
     }

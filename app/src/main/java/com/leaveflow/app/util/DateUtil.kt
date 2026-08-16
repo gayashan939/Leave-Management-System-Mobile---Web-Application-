@@ -45,6 +45,17 @@ object DateUtil {
         return !end.before(start)
     }
 
+    /**
+     * Returns true if [dateStr] is today or in the future.
+     * Comparison is date-only (time is stripped by using storage format parse).
+     */
+    fun isFutureOrToday(dateStr: String): Boolean {
+        val date  = parse(dateStr) ?: return false
+        val todayStr = today()
+        val todayDate = parse(todayStr) ?: return false
+        return !date.before(todayDate)   // date >= today
+    }
+
     /** Returns true if the date string is in valid "yyyy-MM-dd" format. */
     fun isValidFormat(dateStr: String): Boolean = try {
         storageFormat.isLenient = false

@@ -1,23 +1,13 @@
 package com.leaveflow.app.`data`.local.dao
 
-import android.database.Cursor
-import android.os.CancellationSignal
-import androidx.room.CoroutinesRoom
-import androidx.room.CoroutinesRoom.Companion.execute
-import androidx.room.EntityDeletionOrUpdateAdapter
-import androidx.room.EntityInsertionAdapter
+import androidx.room.EntityDeleteOrUpdateAdapter
+import androidx.room.EntityInsertAdapter
 import androidx.room.RoomDatabase
-import androidx.room.RoomSQLiteQuery
-import androidx.room.RoomSQLiteQuery.Companion.acquire
-import androidx.room.SharedSQLiteStatement
-import androidx.room.util.createCancellationSignal
+import androidx.room.coroutines.createFlow
 import androidx.room.util.getColumnIndexOrThrow
-import androidx.room.util.query
-import androidx.sqlite.db.SupportSQLiteStatement
+import androidx.room.util.performSuspending
+import androidx.sqlite.SQLiteStatement
 import com.leaveflow.app.`data`.local.entity.LeaveBalanceEntity
-import java.lang.Class
-import java.util.ArrayList
-import java.util.concurrent.Callable
 import javax.`annotation`.processing.Generated
 import kotlin.Int
 import kotlin.Long
@@ -26,36 +16,29 @@ import kotlin.Suppress
 import kotlin.Unit
 import kotlin.collections.List
 import kotlin.collections.MutableList
-import kotlin.jvm.JvmStatic
+import kotlin.collections.mutableListOf
+import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.Flow
 
 @Generated(value = ["androidx.room.RoomProcessor"])
-@Suppress(names = ["UNCHECKED_CAST", "DEPRECATION", "REDUNDANT_PROJECTION"])
+@Suppress(names = ["UNCHECKED_CAST", "DEPRECATION", "REDUNDANT_PROJECTION", "REMOVAL"])
 public class LeaveBalanceDao_Impl(
   __db: RoomDatabase,
 ) : LeaveBalanceDao {
   private val __db: RoomDatabase
 
-  private val __insertionAdapterOfLeaveBalanceEntity: EntityInsertionAdapter<LeaveBalanceEntity>
+  private val __insertAdapterOfLeaveBalanceEntity: EntityInsertAdapter<LeaveBalanceEntity>
 
-  private val __insertionAdapterOfLeaveBalanceEntity_1: EntityInsertionAdapter<LeaveBalanceEntity>
+  private val __insertAdapterOfLeaveBalanceEntity_1: EntityInsertAdapter<LeaveBalanceEntity>
 
-  private val __updateAdapterOfLeaveBalanceEntity: EntityDeletionOrUpdateAdapter<LeaveBalanceEntity>
-
-  private val __preparedStmtOfAddPendingDays: SharedSQLiteStatement
-
-  private val __preparedStmtOfApproveDays: SharedSQLiteStatement
-
-  private val __preparedStmtOfRejectDays: SharedSQLiteStatement
+  private val __updateAdapterOfLeaveBalanceEntity: EntityDeleteOrUpdateAdapter<LeaveBalanceEntity>
   init {
     this.__db = __db
-    this.__insertionAdapterOfLeaveBalanceEntity = object :
-        EntityInsertionAdapter<LeaveBalanceEntity>(__db) {
-      protected override fun createQuery(): String =
-          "INSERT OR REPLACE INTO `leave_balances` (`employeeId`,`annualTotal`,`annualUsed`,`annualPending`,`casualTotal`,`casualUsed`,`casualPending`,`medicalTotal`,`medicalUsed`,`medicalPending`,`noPayUsed`,`noPayPending`,`lastUpdated`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    this.__insertAdapterOfLeaveBalanceEntity = object : EntityInsertAdapter<LeaveBalanceEntity>() {
+      protected override fun createQuery(): String = "INSERT OR REPLACE INTO `leave_balances` (`employeeId`,`annualTotal`,`annualUsed`,`annualPending`,`casualTotal`,`casualUsed`,`casualPending`,`medicalTotal`,`medicalUsed`,`medicalPending`,`noPayUsed`,`noPayPending`,`lastUpdated`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
-      protected override fun bind(statement: SupportSQLiteStatement, entity: LeaveBalanceEntity) {
-        statement.bindString(1, entity.employeeId)
+      protected override fun bind(statement: SQLiteStatement, entity: LeaveBalanceEntity) {
+        statement.bindText(1, entity.employeeId)
         statement.bindLong(2, entity.annualTotal.toLong())
         statement.bindLong(3, entity.annualUsed.toLong())
         statement.bindLong(4, entity.annualPending.toLong())
@@ -70,13 +53,11 @@ public class LeaveBalanceDao_Impl(
         statement.bindLong(13, entity.lastUpdated)
       }
     }
-    this.__insertionAdapterOfLeaveBalanceEntity_1 = object :
-        EntityInsertionAdapter<LeaveBalanceEntity>(__db) {
-      protected override fun createQuery(): String =
-          "INSERT OR IGNORE INTO `leave_balances` (`employeeId`,`annualTotal`,`annualUsed`,`annualPending`,`casualTotal`,`casualUsed`,`casualPending`,`medicalTotal`,`medicalUsed`,`medicalPending`,`noPayUsed`,`noPayPending`,`lastUpdated`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    this.__insertAdapterOfLeaveBalanceEntity_1 = object : EntityInsertAdapter<LeaveBalanceEntity>() {
+      protected override fun createQuery(): String = "INSERT OR IGNORE INTO `leave_balances` (`employeeId`,`annualTotal`,`annualUsed`,`annualPending`,`casualTotal`,`casualUsed`,`casualPending`,`medicalTotal`,`medicalUsed`,`medicalPending`,`noPayUsed`,`noPayPending`,`lastUpdated`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
-      protected override fun bind(statement: SupportSQLiteStatement, entity: LeaveBalanceEntity) {
-        statement.bindString(1, entity.employeeId)
+      protected override fun bind(statement: SQLiteStatement, entity: LeaveBalanceEntity) {
+        statement.bindText(1, entity.employeeId)
         statement.bindLong(2, entity.annualTotal.toLong())
         statement.bindLong(3, entity.annualUsed.toLong())
         statement.bindLong(4, entity.annualPending.toLong())
@@ -91,13 +72,11 @@ public class LeaveBalanceDao_Impl(
         statement.bindLong(13, entity.lastUpdated)
       }
     }
-    this.__updateAdapterOfLeaveBalanceEntity = object :
-        EntityDeletionOrUpdateAdapter<LeaveBalanceEntity>(__db) {
-      protected override fun createQuery(): String =
-          "UPDATE OR ABORT `leave_balances` SET `employeeId` = ?,`annualTotal` = ?,`annualUsed` = ?,`annualPending` = ?,`casualTotal` = ?,`casualUsed` = ?,`casualPending` = ?,`medicalTotal` = ?,`medicalUsed` = ?,`medicalPending` = ?,`noPayUsed` = ?,`noPayPending` = ?,`lastUpdated` = ? WHERE `employeeId` = ?"
+    this.__updateAdapterOfLeaveBalanceEntity = object : EntityDeleteOrUpdateAdapter<LeaveBalanceEntity>() {
+      protected override fun createQuery(): String = "UPDATE OR ABORT `leave_balances` SET `employeeId` = ?,`annualTotal` = ?,`annualUsed` = ?,`annualPending` = ?,`casualTotal` = ?,`casualUsed` = ?,`casualPending` = ?,`medicalTotal` = ?,`medicalUsed` = ?,`medicalPending` = ?,`noPayUsed` = ?,`noPayPending` = ?,`lastUpdated` = ? WHERE `employeeId` = ?"
 
-      protected override fun bind(statement: SupportSQLiteStatement, entity: LeaveBalanceEntity) {
-        statement.bindString(1, entity.employeeId)
+      protected override fun bind(statement: SQLiteStatement, entity: LeaveBalanceEntity) {
+        statement.bindText(1, entity.employeeId)
         statement.bindLong(2, entity.annualTotal.toLong())
         statement.bindLong(3, entity.annualUsed.toLong())
         statement.bindLong(4, entity.annualPending.toLong())
@@ -110,446 +89,360 @@ public class LeaveBalanceDao_Impl(
         statement.bindLong(11, entity.noPayUsed.toLong())
         statement.bindLong(12, entity.noPayPending.toLong())
         statement.bindLong(13, entity.lastUpdated)
-        statement.bindString(14, entity.employeeId)
-      }
-    }
-    this.__preparedStmtOfAddPendingDays = object : SharedSQLiteStatement(__db) {
-      public override fun createQuery(): String {
-        val _query: String = """
-            |
-            |        UPDATE leave_balances
-            |        SET annualPending  = CASE WHEN ? = 'ANNUAL'  THEN annualPending  + ? ELSE annualPending  END,
-            |            casualPending  = CASE WHEN ? = 'CASUAL'  THEN casualPending  + ? ELSE casualPending  END,
-            |            medicalPending = CASE WHEN ? = 'MEDICAL' THEN medicalPending + ? ELSE medicalPending END,
-            |            noPayPending   = CASE WHEN ? = 'NOPAY'   THEN noPayPending   + ? ELSE noPayPending   END,
-            |            lastUpdated    = ?
-            |        WHERE employeeId = ?
-            |    
-            """.trimMargin()
-        return _query
-      }
-    }
-    this.__preparedStmtOfApproveDays = object : SharedSQLiteStatement(__db) {
-      public override fun createQuery(): String {
-        val _query: String = """
-            |
-            |        UPDATE leave_balances
-            |        SET annualPending  = CASE WHEN ? = 'ANNUAL'  THEN MAX(0, annualPending  - ?) ELSE annualPending  END,
-            |            annualUsed     = CASE WHEN ? = 'ANNUAL'  THEN annualUsed  + ? ELSE annualUsed  END,
-            |            casualPending  = CASE WHEN ? = 'CASUAL'  THEN MAX(0, casualPending  - ?) ELSE casualPending  END,
-            |            casualUsed     = CASE WHEN ? = 'CASUAL'  THEN casualUsed  + ? ELSE casualUsed  END,
-            |            medicalPending = CASE WHEN ? = 'MEDICAL' THEN MAX(0, medicalPending - ?) ELSE medicalPending END,
-            |            medicalUsed    = CASE WHEN ? = 'MEDICAL' THEN medicalUsed + ? ELSE medicalUsed END,
-            |            noPayPending   = CASE WHEN ? = 'NOPAY'   THEN MAX(0, noPayPending   - ?) ELSE noPayPending   END,
-            |            noPayUsed      = CASE WHEN ? = 'NOPAY'   THEN noPayUsed   + ? ELSE noPayUsed   END,
-            |            lastUpdated    = ?
-            |        WHERE employeeId = ?
-            |    
-            """.trimMargin()
-        return _query
-      }
-    }
-    this.__preparedStmtOfRejectDays = object : SharedSQLiteStatement(__db) {
-      public override fun createQuery(): String {
-        val _query: String = """
-            |
-            |        UPDATE leave_balances
-            |        SET annualPending  = CASE WHEN ? = 'ANNUAL'  THEN MAX(0, annualPending  - ?) ELSE annualPending  END,
-            |            casualPending  = CASE WHEN ? = 'CASUAL'  THEN MAX(0, casualPending  - ?) ELSE casualPending  END,
-            |            medicalPending = CASE WHEN ? = 'MEDICAL' THEN MAX(0, medicalPending - ?) ELSE medicalPending END,
-            |            noPayPending   = CASE WHEN ? = 'NOPAY'   THEN MAX(0, noPayPending   - ?) ELSE noPayPending   END,
-            |            lastUpdated    = ?
-            |        WHERE employeeId = ?
-            |    
-            """.trimMargin()
-        return _query
+        statement.bindText(14, entity.employeeId)
       }
     }
   }
 
-  public override suspend fun insertBalance(balance: LeaveBalanceEntity): Unit =
-      CoroutinesRoom.execute(__db, true, object : Callable<Unit> {
-    public override fun call() {
-      __db.beginTransaction()
-      try {
-        __insertionAdapterOfLeaveBalanceEntity.insert(balance)
-        __db.setTransactionSuccessful()
-      } finally {
-        __db.endTransaction()
-      }
-    }
-  })
+  public override suspend fun insertBalance(balance: LeaveBalanceEntity): Unit = performSuspending(__db, false, true) { _connection ->
+    __insertAdapterOfLeaveBalanceEntity.insert(_connection, balance)
+  }
 
-  public override suspend fun insertBalances(balances: List<LeaveBalanceEntity>): Unit =
-      CoroutinesRoom.execute(__db, true, object : Callable<Unit> {
-    public override fun call() {
-      __db.beginTransaction()
-      try {
-        __insertionAdapterOfLeaveBalanceEntity_1.insert(balances)
-        __db.setTransactionSuccessful()
-      } finally {
-        __db.endTransaction()
-      }
-    }
-  })
+  public override suspend fun insertBalances(balances: List<LeaveBalanceEntity>): Unit = performSuspending(__db, false, true) { _connection ->
+    __insertAdapterOfLeaveBalanceEntity_1.insert(_connection, balances)
+  }
 
-  public override suspend fun updateBalance(balance: LeaveBalanceEntity): Unit =
-      CoroutinesRoom.execute(__db, true, object : Callable<Unit> {
-    public override fun call() {
-      __db.beginTransaction()
+  public override suspend fun updateBalance(balance: LeaveBalanceEntity): Unit = performSuspending(__db, false, true) { _connection ->
+    __updateAdapterOfLeaveBalanceEntity.handle(_connection, balance)
+  }
+
+  public override fun getBalanceByEmployee(employeeId: String): Flow<LeaveBalanceEntity?> {
+    val _sql: String = "SELECT * FROM leave_balances WHERE employeeId = ? LIMIT 1"
+    return createFlow(__db, false, arrayOf("leave_balances")) { _connection ->
+      val _stmt: SQLiteStatement = _connection.prepare(_sql)
       try {
-        __updateAdapterOfLeaveBalanceEntity.handle(balance)
-        __db.setTransactionSuccessful()
+        var _argIndex: Int = 1
+        _stmt.bindText(_argIndex, employeeId)
+        val _columnIndexOfEmployeeId: Int = getColumnIndexOrThrow(_stmt, "employeeId")
+        val _columnIndexOfAnnualTotal: Int = getColumnIndexOrThrow(_stmt, "annualTotal")
+        val _columnIndexOfAnnualUsed: Int = getColumnIndexOrThrow(_stmt, "annualUsed")
+        val _columnIndexOfAnnualPending: Int = getColumnIndexOrThrow(_stmt, "annualPending")
+        val _columnIndexOfCasualTotal: Int = getColumnIndexOrThrow(_stmt, "casualTotal")
+        val _columnIndexOfCasualUsed: Int = getColumnIndexOrThrow(_stmt, "casualUsed")
+        val _columnIndexOfCasualPending: Int = getColumnIndexOrThrow(_stmt, "casualPending")
+        val _columnIndexOfMedicalTotal: Int = getColumnIndexOrThrow(_stmt, "medicalTotal")
+        val _columnIndexOfMedicalUsed: Int = getColumnIndexOrThrow(_stmt, "medicalUsed")
+        val _columnIndexOfMedicalPending: Int = getColumnIndexOrThrow(_stmt, "medicalPending")
+        val _columnIndexOfNoPayUsed: Int = getColumnIndexOrThrow(_stmt, "noPayUsed")
+        val _columnIndexOfNoPayPending: Int = getColumnIndexOrThrow(_stmt, "noPayPending")
+        val _columnIndexOfLastUpdated: Int = getColumnIndexOrThrow(_stmt, "lastUpdated")
+        val _result: LeaveBalanceEntity?
+        if (_stmt.step()) {
+          val _tmpEmployeeId: String
+          _tmpEmployeeId = _stmt.getText(_columnIndexOfEmployeeId)
+          val _tmpAnnualTotal: Int
+          _tmpAnnualTotal = _stmt.getLong(_columnIndexOfAnnualTotal).toInt()
+          val _tmpAnnualUsed: Int
+          _tmpAnnualUsed = _stmt.getLong(_columnIndexOfAnnualUsed).toInt()
+          val _tmpAnnualPending: Int
+          _tmpAnnualPending = _stmt.getLong(_columnIndexOfAnnualPending).toInt()
+          val _tmpCasualTotal: Int
+          _tmpCasualTotal = _stmt.getLong(_columnIndexOfCasualTotal).toInt()
+          val _tmpCasualUsed: Int
+          _tmpCasualUsed = _stmt.getLong(_columnIndexOfCasualUsed).toInt()
+          val _tmpCasualPending: Int
+          _tmpCasualPending = _stmt.getLong(_columnIndexOfCasualPending).toInt()
+          val _tmpMedicalTotal: Int
+          _tmpMedicalTotal = _stmt.getLong(_columnIndexOfMedicalTotal).toInt()
+          val _tmpMedicalUsed: Int
+          _tmpMedicalUsed = _stmt.getLong(_columnIndexOfMedicalUsed).toInt()
+          val _tmpMedicalPending: Int
+          _tmpMedicalPending = _stmt.getLong(_columnIndexOfMedicalPending).toInt()
+          val _tmpNoPayUsed: Int
+          _tmpNoPayUsed = _stmt.getLong(_columnIndexOfNoPayUsed).toInt()
+          val _tmpNoPayPending: Int
+          _tmpNoPayPending = _stmt.getLong(_columnIndexOfNoPayPending).toInt()
+          val _tmpLastUpdated: Long
+          _tmpLastUpdated = _stmt.getLong(_columnIndexOfLastUpdated)
+          _result = LeaveBalanceEntity(_tmpEmployeeId,_tmpAnnualTotal,_tmpAnnualUsed,_tmpAnnualPending,_tmpCasualTotal,_tmpCasualUsed,_tmpCasualPending,_tmpMedicalTotal,_tmpMedicalUsed,_tmpMedicalPending,_tmpNoPayUsed,_tmpNoPayPending,_tmpLastUpdated)
+        } else {
+          _result = null
+        }
+        _result
       } finally {
-        __db.endTransaction()
+        _stmt.close()
       }
     }
-  })
+  }
+
+  public override suspend fun getBalanceByEmployeeOnce(employeeId: String): LeaveBalanceEntity? {
+    val _sql: String = "SELECT * FROM leave_balances WHERE employeeId = ? LIMIT 1"
+    return performSuspending(__db, true, false) { _connection ->
+      val _stmt: SQLiteStatement = _connection.prepare(_sql)
+      try {
+        var _argIndex: Int = 1
+        _stmt.bindText(_argIndex, employeeId)
+        val _columnIndexOfEmployeeId: Int = getColumnIndexOrThrow(_stmt, "employeeId")
+        val _columnIndexOfAnnualTotal: Int = getColumnIndexOrThrow(_stmt, "annualTotal")
+        val _columnIndexOfAnnualUsed: Int = getColumnIndexOrThrow(_stmt, "annualUsed")
+        val _columnIndexOfAnnualPending: Int = getColumnIndexOrThrow(_stmt, "annualPending")
+        val _columnIndexOfCasualTotal: Int = getColumnIndexOrThrow(_stmt, "casualTotal")
+        val _columnIndexOfCasualUsed: Int = getColumnIndexOrThrow(_stmt, "casualUsed")
+        val _columnIndexOfCasualPending: Int = getColumnIndexOrThrow(_stmt, "casualPending")
+        val _columnIndexOfMedicalTotal: Int = getColumnIndexOrThrow(_stmt, "medicalTotal")
+        val _columnIndexOfMedicalUsed: Int = getColumnIndexOrThrow(_stmt, "medicalUsed")
+        val _columnIndexOfMedicalPending: Int = getColumnIndexOrThrow(_stmt, "medicalPending")
+        val _columnIndexOfNoPayUsed: Int = getColumnIndexOrThrow(_stmt, "noPayUsed")
+        val _columnIndexOfNoPayPending: Int = getColumnIndexOrThrow(_stmt, "noPayPending")
+        val _columnIndexOfLastUpdated: Int = getColumnIndexOrThrow(_stmt, "lastUpdated")
+        val _result: LeaveBalanceEntity?
+        if (_stmt.step()) {
+          val _tmpEmployeeId: String
+          _tmpEmployeeId = _stmt.getText(_columnIndexOfEmployeeId)
+          val _tmpAnnualTotal: Int
+          _tmpAnnualTotal = _stmt.getLong(_columnIndexOfAnnualTotal).toInt()
+          val _tmpAnnualUsed: Int
+          _tmpAnnualUsed = _stmt.getLong(_columnIndexOfAnnualUsed).toInt()
+          val _tmpAnnualPending: Int
+          _tmpAnnualPending = _stmt.getLong(_columnIndexOfAnnualPending).toInt()
+          val _tmpCasualTotal: Int
+          _tmpCasualTotal = _stmt.getLong(_columnIndexOfCasualTotal).toInt()
+          val _tmpCasualUsed: Int
+          _tmpCasualUsed = _stmt.getLong(_columnIndexOfCasualUsed).toInt()
+          val _tmpCasualPending: Int
+          _tmpCasualPending = _stmt.getLong(_columnIndexOfCasualPending).toInt()
+          val _tmpMedicalTotal: Int
+          _tmpMedicalTotal = _stmt.getLong(_columnIndexOfMedicalTotal).toInt()
+          val _tmpMedicalUsed: Int
+          _tmpMedicalUsed = _stmt.getLong(_columnIndexOfMedicalUsed).toInt()
+          val _tmpMedicalPending: Int
+          _tmpMedicalPending = _stmt.getLong(_columnIndexOfMedicalPending).toInt()
+          val _tmpNoPayUsed: Int
+          _tmpNoPayUsed = _stmt.getLong(_columnIndexOfNoPayUsed).toInt()
+          val _tmpNoPayPending: Int
+          _tmpNoPayPending = _stmt.getLong(_columnIndexOfNoPayPending).toInt()
+          val _tmpLastUpdated: Long
+          _tmpLastUpdated = _stmt.getLong(_columnIndexOfLastUpdated)
+          _result = LeaveBalanceEntity(_tmpEmployeeId,_tmpAnnualTotal,_tmpAnnualUsed,_tmpAnnualPending,_tmpCasualTotal,_tmpCasualUsed,_tmpCasualPending,_tmpMedicalTotal,_tmpMedicalUsed,_tmpMedicalPending,_tmpNoPayUsed,_tmpNoPayPending,_tmpLastUpdated)
+        } else {
+          _result = null
+        }
+        _result
+      } finally {
+        _stmt.close()
+      }
+    }
+  }
+
+  public override fun getAllBalances(): Flow<List<LeaveBalanceEntity>> {
+    val _sql: String = "SELECT * FROM leave_balances"
+    return createFlow(__db, false, arrayOf("leave_balances")) { _connection ->
+      val _stmt: SQLiteStatement = _connection.prepare(_sql)
+      try {
+        val _columnIndexOfEmployeeId: Int = getColumnIndexOrThrow(_stmt, "employeeId")
+        val _columnIndexOfAnnualTotal: Int = getColumnIndexOrThrow(_stmt, "annualTotal")
+        val _columnIndexOfAnnualUsed: Int = getColumnIndexOrThrow(_stmt, "annualUsed")
+        val _columnIndexOfAnnualPending: Int = getColumnIndexOrThrow(_stmt, "annualPending")
+        val _columnIndexOfCasualTotal: Int = getColumnIndexOrThrow(_stmt, "casualTotal")
+        val _columnIndexOfCasualUsed: Int = getColumnIndexOrThrow(_stmt, "casualUsed")
+        val _columnIndexOfCasualPending: Int = getColumnIndexOrThrow(_stmt, "casualPending")
+        val _columnIndexOfMedicalTotal: Int = getColumnIndexOrThrow(_stmt, "medicalTotal")
+        val _columnIndexOfMedicalUsed: Int = getColumnIndexOrThrow(_stmt, "medicalUsed")
+        val _columnIndexOfMedicalPending: Int = getColumnIndexOrThrow(_stmt, "medicalPending")
+        val _columnIndexOfNoPayUsed: Int = getColumnIndexOrThrow(_stmt, "noPayUsed")
+        val _columnIndexOfNoPayPending: Int = getColumnIndexOrThrow(_stmt, "noPayPending")
+        val _columnIndexOfLastUpdated: Int = getColumnIndexOrThrow(_stmt, "lastUpdated")
+        val _result: MutableList<LeaveBalanceEntity> = mutableListOf()
+        while (_stmt.step()) {
+          val _item: LeaveBalanceEntity
+          val _tmpEmployeeId: String
+          _tmpEmployeeId = _stmt.getText(_columnIndexOfEmployeeId)
+          val _tmpAnnualTotal: Int
+          _tmpAnnualTotal = _stmt.getLong(_columnIndexOfAnnualTotal).toInt()
+          val _tmpAnnualUsed: Int
+          _tmpAnnualUsed = _stmt.getLong(_columnIndexOfAnnualUsed).toInt()
+          val _tmpAnnualPending: Int
+          _tmpAnnualPending = _stmt.getLong(_columnIndexOfAnnualPending).toInt()
+          val _tmpCasualTotal: Int
+          _tmpCasualTotal = _stmt.getLong(_columnIndexOfCasualTotal).toInt()
+          val _tmpCasualUsed: Int
+          _tmpCasualUsed = _stmt.getLong(_columnIndexOfCasualUsed).toInt()
+          val _tmpCasualPending: Int
+          _tmpCasualPending = _stmt.getLong(_columnIndexOfCasualPending).toInt()
+          val _tmpMedicalTotal: Int
+          _tmpMedicalTotal = _stmt.getLong(_columnIndexOfMedicalTotal).toInt()
+          val _tmpMedicalUsed: Int
+          _tmpMedicalUsed = _stmt.getLong(_columnIndexOfMedicalUsed).toInt()
+          val _tmpMedicalPending: Int
+          _tmpMedicalPending = _stmt.getLong(_columnIndexOfMedicalPending).toInt()
+          val _tmpNoPayUsed: Int
+          _tmpNoPayUsed = _stmt.getLong(_columnIndexOfNoPayUsed).toInt()
+          val _tmpNoPayPending: Int
+          _tmpNoPayPending = _stmt.getLong(_columnIndexOfNoPayPending).toInt()
+          val _tmpLastUpdated: Long
+          _tmpLastUpdated = _stmt.getLong(_columnIndexOfLastUpdated)
+          _item = LeaveBalanceEntity(_tmpEmployeeId,_tmpAnnualTotal,_tmpAnnualUsed,_tmpAnnualPending,_tmpCasualTotal,_tmpCasualUsed,_tmpCasualPending,_tmpMedicalTotal,_tmpMedicalUsed,_tmpMedicalPending,_tmpNoPayUsed,_tmpNoPayPending,_tmpLastUpdated)
+          _result.add(_item)
+        }
+        _result
+      } finally {
+        _stmt.close()
+      }
+    }
+  }
 
   public override suspend fun addPendingDays(
     employeeId: String,
     leaveType: String,
     days: Int,
     timestamp: Long,
-  ): Unit = CoroutinesRoom.execute(__db, true, object : Callable<Unit> {
-    public override fun call() {
-      val _stmt: SupportSQLiteStatement = __preparedStmtOfAddPendingDays.acquire()
-      var _argIndex: Int = 1
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 2
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 3
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 4
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 5
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 6
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 7
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 8
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 9
-      _stmt.bindLong(_argIndex, timestamp)
-      _argIndex = 10
-      _stmt.bindString(_argIndex, employeeId)
+  ) {
+    val _sql: String = """
+        |
+        |        UPDATE leave_balances
+        |        SET annualPending  = CASE WHEN ? = 'ANNUAL'  THEN annualPending  + ? ELSE annualPending  END,
+        |            casualPending  = CASE WHEN ? = 'CASUAL'  THEN casualPending  + ? ELSE casualPending  END,
+        |            medicalPending = CASE WHEN ? = 'MEDICAL' THEN medicalPending + ? ELSE medicalPending END,
+        |            noPayPending   = CASE WHEN ? = 'NOPAY'   THEN noPayPending   + ? ELSE noPayPending   END,
+        |            lastUpdated    = ?
+        |        WHERE employeeId = ?
+        |    
+        """.trimMargin()
+    return performSuspending(__db, false, true) { _connection ->
+      val _stmt: SQLiteStatement = _connection.prepare(_sql)
       try {
-        __db.beginTransaction()
-        try {
-          _stmt.executeUpdateDelete()
-          __db.setTransactionSuccessful()
-        } finally {
-          __db.endTransaction()
-        }
+        var _argIndex: Int = 1
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 2
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 3
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 4
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 5
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 6
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 7
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 8
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 9
+        _stmt.bindLong(_argIndex, timestamp)
+        _argIndex = 10
+        _stmt.bindText(_argIndex, employeeId)
+        _stmt.step()
       } finally {
-        __preparedStmtOfAddPendingDays.release(_stmt)
+        _stmt.close()
       }
     }
-  })
+  }
 
   public override suspend fun approveDays(
     employeeId: String,
     leaveType: String,
     days: Int,
     timestamp: Long,
-  ): Unit = CoroutinesRoom.execute(__db, true, object : Callable<Unit> {
-    public override fun call() {
-      val _stmt: SupportSQLiteStatement = __preparedStmtOfApproveDays.acquire()
-      var _argIndex: Int = 1
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 2
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 3
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 4
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 5
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 6
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 7
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 8
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 9
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 10
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 11
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 12
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 13
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 14
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 15
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 16
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 17
-      _stmt.bindLong(_argIndex, timestamp)
-      _argIndex = 18
-      _stmt.bindString(_argIndex, employeeId)
+  ) {
+    val _sql: String = """
+        |
+        |        UPDATE leave_balances
+        |        SET annualPending  = CASE WHEN ? = 'ANNUAL'  THEN MAX(0, annualPending  - ?) ELSE annualPending  END,
+        |            annualUsed     = CASE WHEN ? = 'ANNUAL'  THEN annualUsed  + ? ELSE annualUsed  END,
+        |            casualPending  = CASE WHEN ? = 'CASUAL'  THEN MAX(0, casualPending  - ?) ELSE casualPending  END,
+        |            casualUsed     = CASE WHEN ? = 'CASUAL'  THEN casualUsed  + ? ELSE casualUsed  END,
+        |            medicalPending = CASE WHEN ? = 'MEDICAL' THEN MAX(0, medicalPending - ?) ELSE medicalPending END,
+        |            medicalUsed    = CASE WHEN ? = 'MEDICAL' THEN medicalUsed + ? ELSE medicalUsed END,
+        |            noPayPending   = CASE WHEN ? = 'NOPAY'   THEN MAX(0, noPayPending   - ?) ELSE noPayPending   END,
+        |            noPayUsed      = CASE WHEN ? = 'NOPAY'   THEN noPayUsed   + ? ELSE noPayUsed   END,
+        |            lastUpdated    = ?
+        |        WHERE employeeId = ?
+        |    
+        """.trimMargin()
+    return performSuspending(__db, false, true) { _connection ->
+      val _stmt: SQLiteStatement = _connection.prepare(_sql)
       try {
-        __db.beginTransaction()
-        try {
-          _stmt.executeUpdateDelete()
-          __db.setTransactionSuccessful()
-        } finally {
-          __db.endTransaction()
-        }
+        var _argIndex: Int = 1
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 2
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 3
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 4
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 5
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 6
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 7
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 8
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 9
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 10
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 11
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 12
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 13
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 14
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 15
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 16
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 17
+        _stmt.bindLong(_argIndex, timestamp)
+        _argIndex = 18
+        _stmt.bindText(_argIndex, employeeId)
+        _stmt.step()
       } finally {
-        __preparedStmtOfApproveDays.release(_stmt)
+        _stmt.close()
       }
     }
-  })
+  }
 
   public override suspend fun rejectDays(
     employeeId: String,
     leaveType: String,
     days: Int,
     timestamp: Long,
-  ): Unit = CoroutinesRoom.execute(__db, true, object : Callable<Unit> {
-    public override fun call() {
-      val _stmt: SupportSQLiteStatement = __preparedStmtOfRejectDays.acquire()
-      var _argIndex: Int = 1
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 2
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 3
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 4
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 5
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 6
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 7
-      _stmt.bindString(_argIndex, leaveType)
-      _argIndex = 8
-      _stmt.bindLong(_argIndex, days.toLong())
-      _argIndex = 9
-      _stmt.bindLong(_argIndex, timestamp)
-      _argIndex = 10
-      _stmt.bindString(_argIndex, employeeId)
+  ) {
+    val _sql: String = """
+        |
+        |        UPDATE leave_balances
+        |        SET annualPending  = CASE WHEN ? = 'ANNUAL'  THEN MAX(0, annualPending  - ?) ELSE annualPending  END,
+        |            casualPending  = CASE WHEN ? = 'CASUAL'  THEN MAX(0, casualPending  - ?) ELSE casualPending  END,
+        |            medicalPending = CASE WHEN ? = 'MEDICAL' THEN MAX(0, medicalPending - ?) ELSE medicalPending END,
+        |            noPayPending   = CASE WHEN ? = 'NOPAY'   THEN MAX(0, noPayPending   - ?) ELSE noPayPending   END,
+        |            lastUpdated    = ?
+        |        WHERE employeeId = ?
+        |    
+        """.trimMargin()
+    return performSuspending(__db, false, true) { _connection ->
+      val _stmt: SQLiteStatement = _connection.prepare(_sql)
       try {
-        __db.beginTransaction()
-        try {
-          _stmt.executeUpdateDelete()
-          __db.setTransactionSuccessful()
-        } finally {
-          __db.endTransaction()
-        }
+        var _argIndex: Int = 1
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 2
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 3
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 4
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 5
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 6
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 7
+        _stmt.bindText(_argIndex, leaveType)
+        _argIndex = 8
+        _stmt.bindLong(_argIndex, days.toLong())
+        _argIndex = 9
+        _stmt.bindLong(_argIndex, timestamp)
+        _argIndex = 10
+        _stmt.bindText(_argIndex, employeeId)
+        _stmt.step()
       } finally {
-        __preparedStmtOfRejectDays.release(_stmt)
+        _stmt.close()
       }
     }
-  })
-
-  public override fun getBalanceByEmployee(employeeId: String): Flow<LeaveBalanceEntity?> {
-    val _sql: String = "SELECT * FROM leave_balances WHERE employeeId = ? LIMIT 1"
-    val _statement: RoomSQLiteQuery = acquire(_sql, 1)
-    var _argIndex: Int = 1
-    _statement.bindString(_argIndex, employeeId)
-    return CoroutinesRoom.createFlow(__db, false, arrayOf("leave_balances"), object :
-        Callable<LeaveBalanceEntity?> {
-      public override fun call(): LeaveBalanceEntity? {
-        val _cursor: Cursor = query(__db, _statement, false, null)
-        try {
-          val _cursorIndexOfEmployeeId: Int = getColumnIndexOrThrow(_cursor, "employeeId")
-          val _cursorIndexOfAnnualTotal: Int = getColumnIndexOrThrow(_cursor, "annualTotal")
-          val _cursorIndexOfAnnualUsed: Int = getColumnIndexOrThrow(_cursor, "annualUsed")
-          val _cursorIndexOfAnnualPending: Int = getColumnIndexOrThrow(_cursor, "annualPending")
-          val _cursorIndexOfCasualTotal: Int = getColumnIndexOrThrow(_cursor, "casualTotal")
-          val _cursorIndexOfCasualUsed: Int = getColumnIndexOrThrow(_cursor, "casualUsed")
-          val _cursorIndexOfCasualPending: Int = getColumnIndexOrThrow(_cursor, "casualPending")
-          val _cursorIndexOfMedicalTotal: Int = getColumnIndexOrThrow(_cursor, "medicalTotal")
-          val _cursorIndexOfMedicalUsed: Int = getColumnIndexOrThrow(_cursor, "medicalUsed")
-          val _cursorIndexOfMedicalPending: Int = getColumnIndexOrThrow(_cursor, "medicalPending")
-          val _cursorIndexOfNoPayUsed: Int = getColumnIndexOrThrow(_cursor, "noPayUsed")
-          val _cursorIndexOfNoPayPending: Int = getColumnIndexOrThrow(_cursor, "noPayPending")
-          val _cursorIndexOfLastUpdated: Int = getColumnIndexOrThrow(_cursor, "lastUpdated")
-          val _result: LeaveBalanceEntity?
-          if (_cursor.moveToFirst()) {
-            val _tmpEmployeeId: String
-            _tmpEmployeeId = _cursor.getString(_cursorIndexOfEmployeeId)
-            val _tmpAnnualTotal: Int
-            _tmpAnnualTotal = _cursor.getInt(_cursorIndexOfAnnualTotal)
-            val _tmpAnnualUsed: Int
-            _tmpAnnualUsed = _cursor.getInt(_cursorIndexOfAnnualUsed)
-            val _tmpAnnualPending: Int
-            _tmpAnnualPending = _cursor.getInt(_cursorIndexOfAnnualPending)
-            val _tmpCasualTotal: Int
-            _tmpCasualTotal = _cursor.getInt(_cursorIndexOfCasualTotal)
-            val _tmpCasualUsed: Int
-            _tmpCasualUsed = _cursor.getInt(_cursorIndexOfCasualUsed)
-            val _tmpCasualPending: Int
-            _tmpCasualPending = _cursor.getInt(_cursorIndexOfCasualPending)
-            val _tmpMedicalTotal: Int
-            _tmpMedicalTotal = _cursor.getInt(_cursorIndexOfMedicalTotal)
-            val _tmpMedicalUsed: Int
-            _tmpMedicalUsed = _cursor.getInt(_cursorIndexOfMedicalUsed)
-            val _tmpMedicalPending: Int
-            _tmpMedicalPending = _cursor.getInt(_cursorIndexOfMedicalPending)
-            val _tmpNoPayUsed: Int
-            _tmpNoPayUsed = _cursor.getInt(_cursorIndexOfNoPayUsed)
-            val _tmpNoPayPending: Int
-            _tmpNoPayPending = _cursor.getInt(_cursorIndexOfNoPayPending)
-            val _tmpLastUpdated: Long
-            _tmpLastUpdated = _cursor.getLong(_cursorIndexOfLastUpdated)
-            _result =
-                LeaveBalanceEntity(_tmpEmployeeId,_tmpAnnualTotal,_tmpAnnualUsed,_tmpAnnualPending,_tmpCasualTotal,_tmpCasualUsed,_tmpCasualPending,_tmpMedicalTotal,_tmpMedicalUsed,_tmpMedicalPending,_tmpNoPayUsed,_tmpNoPayPending,_tmpLastUpdated)
-          } else {
-            _result = null
-          }
-          return _result
-        } finally {
-          _cursor.close()
-        }
-      }
-
-      protected fun finalize() {
-        _statement.release()
-      }
-    })
-  }
-
-  public override suspend fun getBalanceByEmployeeOnce(employeeId: String): LeaveBalanceEntity? {
-    val _sql: String = "SELECT * FROM leave_balances WHERE employeeId = ? LIMIT 1"
-    val _statement: RoomSQLiteQuery = acquire(_sql, 1)
-    var _argIndex: Int = 1
-    _statement.bindString(_argIndex, employeeId)
-    val _cancellationSignal: CancellationSignal? = createCancellationSignal()
-    return execute(__db, false, _cancellationSignal, object : Callable<LeaveBalanceEntity?> {
-      public override fun call(): LeaveBalanceEntity? {
-        val _cursor: Cursor = query(__db, _statement, false, null)
-        try {
-          val _cursorIndexOfEmployeeId: Int = getColumnIndexOrThrow(_cursor, "employeeId")
-          val _cursorIndexOfAnnualTotal: Int = getColumnIndexOrThrow(_cursor, "annualTotal")
-          val _cursorIndexOfAnnualUsed: Int = getColumnIndexOrThrow(_cursor, "annualUsed")
-          val _cursorIndexOfAnnualPending: Int = getColumnIndexOrThrow(_cursor, "annualPending")
-          val _cursorIndexOfCasualTotal: Int = getColumnIndexOrThrow(_cursor, "casualTotal")
-          val _cursorIndexOfCasualUsed: Int = getColumnIndexOrThrow(_cursor, "casualUsed")
-          val _cursorIndexOfCasualPending: Int = getColumnIndexOrThrow(_cursor, "casualPending")
-          val _cursorIndexOfMedicalTotal: Int = getColumnIndexOrThrow(_cursor, "medicalTotal")
-          val _cursorIndexOfMedicalUsed: Int = getColumnIndexOrThrow(_cursor, "medicalUsed")
-          val _cursorIndexOfMedicalPending: Int = getColumnIndexOrThrow(_cursor, "medicalPending")
-          val _cursorIndexOfNoPayUsed: Int = getColumnIndexOrThrow(_cursor, "noPayUsed")
-          val _cursorIndexOfNoPayPending: Int = getColumnIndexOrThrow(_cursor, "noPayPending")
-          val _cursorIndexOfLastUpdated: Int = getColumnIndexOrThrow(_cursor, "lastUpdated")
-          val _result: LeaveBalanceEntity?
-          if (_cursor.moveToFirst()) {
-            val _tmpEmployeeId: String
-            _tmpEmployeeId = _cursor.getString(_cursorIndexOfEmployeeId)
-            val _tmpAnnualTotal: Int
-            _tmpAnnualTotal = _cursor.getInt(_cursorIndexOfAnnualTotal)
-            val _tmpAnnualUsed: Int
-            _tmpAnnualUsed = _cursor.getInt(_cursorIndexOfAnnualUsed)
-            val _tmpAnnualPending: Int
-            _tmpAnnualPending = _cursor.getInt(_cursorIndexOfAnnualPending)
-            val _tmpCasualTotal: Int
-            _tmpCasualTotal = _cursor.getInt(_cursorIndexOfCasualTotal)
-            val _tmpCasualUsed: Int
-            _tmpCasualUsed = _cursor.getInt(_cursorIndexOfCasualUsed)
-            val _tmpCasualPending: Int
-            _tmpCasualPending = _cursor.getInt(_cursorIndexOfCasualPending)
-            val _tmpMedicalTotal: Int
-            _tmpMedicalTotal = _cursor.getInt(_cursorIndexOfMedicalTotal)
-            val _tmpMedicalUsed: Int
-            _tmpMedicalUsed = _cursor.getInt(_cursorIndexOfMedicalUsed)
-            val _tmpMedicalPending: Int
-            _tmpMedicalPending = _cursor.getInt(_cursorIndexOfMedicalPending)
-            val _tmpNoPayUsed: Int
-            _tmpNoPayUsed = _cursor.getInt(_cursorIndexOfNoPayUsed)
-            val _tmpNoPayPending: Int
-            _tmpNoPayPending = _cursor.getInt(_cursorIndexOfNoPayPending)
-            val _tmpLastUpdated: Long
-            _tmpLastUpdated = _cursor.getLong(_cursorIndexOfLastUpdated)
-            _result =
-                LeaveBalanceEntity(_tmpEmployeeId,_tmpAnnualTotal,_tmpAnnualUsed,_tmpAnnualPending,_tmpCasualTotal,_tmpCasualUsed,_tmpCasualPending,_tmpMedicalTotal,_tmpMedicalUsed,_tmpMedicalPending,_tmpNoPayUsed,_tmpNoPayPending,_tmpLastUpdated)
-          } else {
-            _result = null
-          }
-          return _result
-        } finally {
-          _cursor.close()
-          _statement.release()
-        }
-      }
-    })
-  }
-
-  public override fun getAllBalances(): Flow<List<LeaveBalanceEntity>> {
-    val _sql: String = "SELECT * FROM leave_balances"
-    val _statement: RoomSQLiteQuery = acquire(_sql, 0)
-    return CoroutinesRoom.createFlow(__db, false, arrayOf("leave_balances"), object :
-        Callable<List<LeaveBalanceEntity>> {
-      public override fun call(): List<LeaveBalanceEntity> {
-        val _cursor: Cursor = query(__db, _statement, false, null)
-        try {
-          val _cursorIndexOfEmployeeId: Int = getColumnIndexOrThrow(_cursor, "employeeId")
-          val _cursorIndexOfAnnualTotal: Int = getColumnIndexOrThrow(_cursor, "annualTotal")
-          val _cursorIndexOfAnnualUsed: Int = getColumnIndexOrThrow(_cursor, "annualUsed")
-          val _cursorIndexOfAnnualPending: Int = getColumnIndexOrThrow(_cursor, "annualPending")
-          val _cursorIndexOfCasualTotal: Int = getColumnIndexOrThrow(_cursor, "casualTotal")
-          val _cursorIndexOfCasualUsed: Int = getColumnIndexOrThrow(_cursor, "casualUsed")
-          val _cursorIndexOfCasualPending: Int = getColumnIndexOrThrow(_cursor, "casualPending")
-          val _cursorIndexOfMedicalTotal: Int = getColumnIndexOrThrow(_cursor, "medicalTotal")
-          val _cursorIndexOfMedicalUsed: Int = getColumnIndexOrThrow(_cursor, "medicalUsed")
-          val _cursorIndexOfMedicalPending: Int = getColumnIndexOrThrow(_cursor, "medicalPending")
-          val _cursorIndexOfNoPayUsed: Int = getColumnIndexOrThrow(_cursor, "noPayUsed")
-          val _cursorIndexOfNoPayPending: Int = getColumnIndexOrThrow(_cursor, "noPayPending")
-          val _cursorIndexOfLastUpdated: Int = getColumnIndexOrThrow(_cursor, "lastUpdated")
-          val _result: MutableList<LeaveBalanceEntity> =
-              ArrayList<LeaveBalanceEntity>(_cursor.getCount())
-          while (_cursor.moveToNext()) {
-            val _item: LeaveBalanceEntity
-            val _tmpEmployeeId: String
-            _tmpEmployeeId = _cursor.getString(_cursorIndexOfEmployeeId)
-            val _tmpAnnualTotal: Int
-            _tmpAnnualTotal = _cursor.getInt(_cursorIndexOfAnnualTotal)
-            val _tmpAnnualUsed: Int
-            _tmpAnnualUsed = _cursor.getInt(_cursorIndexOfAnnualUsed)
-            val _tmpAnnualPending: Int
-            _tmpAnnualPending = _cursor.getInt(_cursorIndexOfAnnualPending)
-            val _tmpCasualTotal: Int
-            _tmpCasualTotal = _cursor.getInt(_cursorIndexOfCasualTotal)
-            val _tmpCasualUsed: Int
-            _tmpCasualUsed = _cursor.getInt(_cursorIndexOfCasualUsed)
-            val _tmpCasualPending: Int
-            _tmpCasualPending = _cursor.getInt(_cursorIndexOfCasualPending)
-            val _tmpMedicalTotal: Int
-            _tmpMedicalTotal = _cursor.getInt(_cursorIndexOfMedicalTotal)
-            val _tmpMedicalUsed: Int
-            _tmpMedicalUsed = _cursor.getInt(_cursorIndexOfMedicalUsed)
-            val _tmpMedicalPending: Int
-            _tmpMedicalPending = _cursor.getInt(_cursorIndexOfMedicalPending)
-            val _tmpNoPayUsed: Int
-            _tmpNoPayUsed = _cursor.getInt(_cursorIndexOfNoPayUsed)
-            val _tmpNoPayPending: Int
-            _tmpNoPayPending = _cursor.getInt(_cursorIndexOfNoPayPending)
-            val _tmpLastUpdated: Long
-            _tmpLastUpdated = _cursor.getLong(_cursorIndexOfLastUpdated)
-            _item =
-                LeaveBalanceEntity(_tmpEmployeeId,_tmpAnnualTotal,_tmpAnnualUsed,_tmpAnnualPending,_tmpCasualTotal,_tmpCasualUsed,_tmpCasualPending,_tmpMedicalTotal,_tmpMedicalUsed,_tmpMedicalPending,_tmpNoPayUsed,_tmpNoPayPending,_tmpLastUpdated)
-            _result.add(_item)
-          }
-          return _result
-        } finally {
-          _cursor.close()
-        }
-      }
-
-      protected fun finalize() {
-        _statement.release()
-      }
-    })
   }
 
   public companion object {
-    @JvmStatic
-    public fun getRequiredConverters(): List<Class<*>> = emptyList()
+    public fun getRequiredConverters(): List<KClass<*>> = emptyList()
   }
 }

@@ -3,6 +3,7 @@ package com.leaveflow.app.di
 import android.content.Context
 import androidx.work.WorkManager
 import com.leaveflow.app.data.local.AppDatabase
+import com.leaveflow.app.data.local.dao.BlockedDateDao
 import com.leaveflow.app.data.local.dao.LeaveBalanceDao
 import com.leaveflow.app.data.local.dao.LeaveRequestDao
 import com.leaveflow.app.data.local.dao.SyncQueueDao
@@ -33,6 +34,9 @@ object AppModule {
 
     @Provides
     fun provideSyncQueueDao(db: AppDatabase): SyncQueueDao = db.syncQueueDao()
+
+    @Provides
+    fun provideBlockedDateDao(db: AppDatabase): BlockedDateDao = db.blockedDateDao()
 
     @Provides
     @Singleton

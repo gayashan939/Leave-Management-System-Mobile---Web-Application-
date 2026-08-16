@@ -1,0 +1,28 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isStaff() {
+      return signedIn() &&
+        firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role
+          in ['MANAGER', 'HR'];
+    }
+
+    match /leave-attachments/{employeeId}/{requestId}/{fileName} {
+      allow read: if signedIn() && (request.auth.uid == employeeId || isStaff());
+      allow create, update: if signedIn()
+        && request.auth.uid == employeeId
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if signedIn() && (request.auth.uid == employeeId || isStaff());
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,117 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function profile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isManager() {
+      return signedIn() && profile().role == 'MANAGER';
+    }
+
+    function isHr() {
+      return signedIn() && profile().role == 'HR';
+    }
+
+    function isStaff() {
+      return isManager() || isHr();
+    }
+
+    match /users/{userId} {
+      allow read: if signedIn() && (request.auth.uid == userId || isStaff());
+      // Accounts and roles are provisioned by the Admin SDK seed/admin tooling.
+      allow create, update, delete: if false;
+    }
+
+    match /leaveRequests/{requestId} {
+      allow read: if signedIn() &&
+        (resource.data.employeeId == request.auth.uid || isStaff());
+
+      allow create: if signedIn()
+        && request.resource.data.employeeId == request.auth.uid
+        && request.resource.data.status == 'PENDING'
+        && request.resource.data.deleted == false
+        && request.resource.data.numberOfDays > 0
+        && request.resource.data.leaveType in ['ANNUAL', 'CASUAL', 'MEDICAL', 'NOPAY'];
+
+      // Managers own workflow fields; immutable employee data cannot be changed.
+      allow update: if isManager()
+        && resource.data.status == 'PENDING'
+        && request.resource.data.status in ['APPROVED', 'REJECTED']
+        && request.resource.data.managerId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'managerId', 'managerComment', 'updatedAt', 'revision']);
+
+      // Employees delete rejected requests through a synchronized tombstone.
+      allow update: if signedIn()
+        && resource.data.employeeId == request.auth.uid
+        && resource.data.status == 'REJECTED'
+        && request.resource.data.deleted == true
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['deleted', 'updatedAt', 'revision']);
+
+      allow delete: if false;
+    }
+
+    match /leaveBalances/{userId} {
+      allow read: if signedIn() && (request.auth.uid == userId || isStaff());
+
+      // The first employee request may initialize the default balance document.
+      allow create: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.employeeId == userId
+        && request.resource.data.annualTotal == 20
+        && request.resource.data.casualTotal == 10
+        && request.resource.data.medicalTotal == 14
+        && request.resource.data.annualUsed == 0
+        && request.resource.data.casualUsed == 0
+        && request.resource.data.medicalUsed == 0;
+
+      // Employees may only reserve additional pending days.
+      allow update: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.annualTotal == resource.data.annualTotal
+        && request.resource.data.casualTotal == resource.data.casualTotal
+        && request.resource.data.medicalTotal == resource.data.medicalTotal
+        && request.resource.data.annualUsed == resource.data.annualUsed
+        && request.resource.data.casualUsed == resource.data.casualUsed
+        && request.resource.data.medicalUsed == resource.data.medicalUsed
+        && request.resource.data.noPayUsed == resource.data.noPayUsed
+        && request.resource.data.annualPending >= resource.data.annualPending
+        && request.resource.data.casualPending >= resource.data.casualPending
+        && request.resource.data.medicalPending >= resource.data.medicalPending
+        && request.resource.data.noPayPending >= resource.data.noPayPending
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'annualPending', 'casualPending', 'medicalPending', 'noPayPending', 'updatedAt'
+        ]);
+
+      // Managers apply pending -> used/released transitions in the same transaction
+      // as the leave status update. HR may maintain entitlements.
+      allow update: if isManager()
+        && request.resource.data.employeeId == resource.data.employeeId
+        && request.resource.data.annualTotal == resource.data.annualTotal
+        && request.resource.data.casualTotal == resource.data.casualTotal
+        && request.resource.data.medicalTotal == resource.data.medicalTotal
+        && request.resource.data.annualPending >= 0
+        && request.resource.data.casualPending >= 0
+        && request.resource.data.medicalPending >= 0
+        && request.resource.data.noPayPending >= 0
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'annualUsed', 'annualPending', 'casualUsed', 'casualPending',
+          'medicalUsed', 'medicalPending', 'noPayUsed', 'noPayPending', 'updatedAt'
+        ]);
+
+      allow update: if isHr();
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

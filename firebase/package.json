@@ -1,0 +1,10 @@
+{
+  "name": "leaveflow-firebase-tools",
+  "private": true,
+  "scripts": {
+    "seed": "node seed.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.5.0"
+  }
+}
